@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P2PCasinoGame", "P2PCasinoGame\P2PCasinoGame.csproj", "{E1B09475-DF65-408B-B413-DB68DAD6FA66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Peer", "Peer\Peer.csproj", "{241EDC2C-2510-44C5-9EE1-6558EB6F523D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E1B09475-DF65-408B-B413-DB68DAD6FA66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E1B09475-DF65-408B-B413-DB68DAD6FA66}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E1B09475-DF65-408B-B413-DB68DAD6FA66}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E1B09475-DF65-408B-B413-DB68DAD6FA66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{241EDC2C-2510-44C5-9EE1-6558EB6F523D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{241EDC2C-2510-44C5-9EE1-6558EB6F523D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{241EDC2C-2510-44C5-9EE1-6558EB6F523D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{241EDC2C-2510-44C5-9EE1-6558EB6F523D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
