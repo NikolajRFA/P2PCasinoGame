@@ -8,7 +8,8 @@ namespace Peer;
 
 public class Program
 {
-    public static int gameState = 0;
+    public static int GameState = 0;
+    public static List<string> IpAddresses;
     
     public static void Main(string[] args)
     {
@@ -16,12 +17,14 @@ public class Program
         //Thread client = new Thread(Client);
         receiver.Start();
         //client.Start();
-        Sender();
+        //192.168.155.21
+        Console.Write("IP Address: ");
+        string serverIp = Console.ReadLine();
+        Sender(serverIp);
     }
 
-    static void Sender()
+    static void Sender(string serverIp)
     {
-        const string serverIp = "127.0.0.1"; // Change to the server's IP
         int port = 8000;
         TcpClient client = new TcpClient(serverIp, port);
         Console.WriteLine($"Connected to {serverIp}:{port}");
@@ -32,7 +35,7 @@ public class Program
             if (message == "QUIT")
                 break;
             else if (message.StartsWith("ADD"))
-                gameState += Int32.Parse(message.Split(":").Last());
+                GameState += Int32.Parse(message.Split(":").Last());
             
             
             
@@ -57,6 +60,7 @@ public class Program
             TcpClient client = server.AcceptTcpClient();
     
             Console.WriteLine($"Client connected. {client.Client.RemoteEndPoint}");
+            IpAddresses.Add(client.Client.RemoteEndPoint.ToString().Split(":").First());
             Thread clientThread = new Thread(HandleClientComm);
             clientThread.Start(client);
         }
@@ -90,8 +94,8 @@ public class Program
 
             string dataReceived = Encoding.ASCII.GetString(message, 0, bytesRead);
             Console.WriteLine($"Received: {dataReceived}");
-            if (dataReceived.StartsWith("ADD")) gameState += Int32.Parse(dataReceived.Split(":").Last());
-            Console.WriteLine($"Game state is {gameState}");
+            if (dataReceived.StartsWith("ADD")) GameState += Int32.Parse(dataReceived.Split(":").Last());
+            Console.WriteLine($"Game state is {GameState}");
             // Process the message here
         }
 
