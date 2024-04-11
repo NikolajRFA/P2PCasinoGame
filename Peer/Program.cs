@@ -12,14 +12,14 @@ public class Program
     
     public static void Main(string[] args)
     {
-        Thread server = new Thread(Server);
+        Thread receiver = new Thread(Receiver);
         //Thread client = new Thread(Client);
-        server.Start();
+        receiver.Start();
         //client.Start();
-        Client();
+        Sender();
     }
 
-    static void Client()
+    static void Sender()
     {
         const string serverIp = "127.0.0.1"; // Change to the server's IP
         int port = 8000;
@@ -28,19 +28,24 @@ public class Program
 
         while (true)
         {
-            string message = Console.ReadLine();;
+            string message = Console.ReadLine();
             if (message == "QUIT")
-                Environment.Exit(0);
-
+                break;
+            else if (message.StartsWith("ADD"))
+                gameState += Int32.Parse(message.Split(":").Last());
+            
+            
+            
             byte[] data = Encoding.ASCII.GetBytes(message);
             NetworkStream stream = client.GetStream();
             stream.Write(data, 0, data.Length);
         }
 
         client.Close();
+        Environment.Exit(0);
     }
 
-    static void Server()
+    static void Receiver()
     {
         int port = 8000;
         TcpListener server = new TcpListener(IPAddress.Any, port);
@@ -85,6 +90,8 @@ public class Program
 
             string dataReceived = Encoding.ASCII.GetString(message, 0, bytesRead);
             Console.WriteLine($"Received: {dataReceived}");
+            if (dataReceived.StartsWith("ADD")) gameState += Int32.Parse(dataReceived.Split(":").Last());
+            Console.WriteLine($"Game state is {gameState}");
             // Process the message here
         }
 
