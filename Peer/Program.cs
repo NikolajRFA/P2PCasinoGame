@@ -8,70 +8,79 @@ namespace Peer;
 
 public class Program
 {
-    public static int GameState = 0;
-    public static List<string> IpAddresses;
-    
+    public const int Port = 8000;
+    public static int GameState;
+    public static Dictionary<string, TcpClient> Senders = new();
+
     public static void Main(string[] args)
     {
-        Thread receiver = new Thread(Receiver);
+        var receiver = new Thread(Receiver);
         //Thread client = new Thread(Client);
         receiver.Start();
         //client.Start();
         //192.168.155.21
         Console.Write("IP Address: ");
-        string serverIp = Console.ReadLine();
-        Sender(serverIp);
-    }
-
-    static void Sender(string serverIp)
-    {
-        int port = 8000;
-        TcpClient client = new TcpClient(serverIp, port);
-        Console.WriteLine($"Connected to {serverIp}:{port}");
+        var serverIp = Console.ReadLine();
+        NewSender(serverIp);
 
         while (true)
         {
-            string message = Console.ReadLine();
-            if (message == "QUIT")
-                break;
-            else if (message.StartsWith("ADD"))
-                GameState += Int32.Parse(message.Split(":").Last());
-            
-            
-            
-            byte[] data = Encoding.ASCII.GetBytes(message);
-            NetworkStream stream = client.GetStream();
-            stream.Write(data, 0, data.Length);
+            var message = Console.ReadLine() ?? "";
+            if (message == "QUIT") break;
+            foreach (var sender in Senders)
+            {
+                SendMessage(sender.Value, message);
+            }
         }
 
-        client.Close();
-        Environment.Exit(0);
+        foreach (var sender in Senders)
+        {
+            sender.Value.Close();
+        }
+        Environment.Exit(1);
     }
 
-    static void Receiver()
+    private static void SendMessage(TcpClient client, string message)
     {
-        int port = 8000;
-        TcpListener server = new TcpListener(IPAddress.Any, port);
+        if (message.StartsWith("ADD"))
+            GameState += int.Parse(message.Split(":").Last());
+
+
+        var data = Encoding.ASCII.GetBytes(message);
+        var stream = client.GetStream();
+        stream.Write(data, 0, data.Length);
+    }
+
+    private static void Receiver()
+    {
+        var port = 8000;
+        var server = new TcpListener(IPAddress.Any, port);
         server.Start();
         Console.WriteLine($"Server started on port {port}");
 
         while (true)
         {
-            TcpClient client = server.AcceptTcpClient();
-    
+            var client = server.AcceptTcpClient();
+
             Console.WriteLine($"Client connected. {client.Client.RemoteEndPoint}");
-            IpAddresses.Add(client.Client.RemoteEndPoint.ToString().Split(":").First());
-            Thread clientThread = new Thread(HandleClientComm);
+            var senderIp = client.Client.RemoteEndPoint!.ToString()!.Split(":").First();
+            if (!Senders.ContainsKey(senderIp))
+                NewSender(senderIp);
+            foreach (var sender in Senders)
+            {
+                SendMessage(sender.Value, string.Join(":", Senders.Select(x => x.Key)));
+            }
+            var clientThread = new Thread(HandleClientComm);
             clientThread.Start(client);
         }
     }
-    
-    static void HandleClientComm(object client)
-    {
-        TcpClient tcpClient = (TcpClient)client;
-        NetworkStream clientStream = tcpClient.GetStream();
 
-        byte[] message = new byte[4096];
+    private static void HandleClientComm(object client)
+    {
+        var tcpClient = (TcpClient)client;
+        var clientStream = tcpClient.GetStream();
+
+        var message = new byte[4096];
         int bytesRead;
 
         while (true)
@@ -87,18 +96,27 @@ public class Program
                 break;
             }
 
-            if (bytesRead == 0)
-            {
-                break;
-            }
+            if (bytesRead == 0) break;
 
-            string dataReceived = Encoding.ASCII.GetString(message, 0, bytesRead);
+            var dataReceived = Encoding.ASCII.GetString(message, 0, bytesRead);
             Console.WriteLine($"Received: {dataReceived}");
-            if (dataReceived.StartsWith("ADD")) GameState += Int32.Parse(dataReceived.Split(":").Last());
+            if (dataReceived.StartsWith("ADD")) GameState += int.Parse(dataReceived.Split(":").Last());
             Console.WriteLine($"Game state is {GameState}");
-            // Process the message here
         }
 
         tcpClient.Close();
+    }
+
+    public static void NewSender(string ipAddress)
+    {
+        var sender = new TcpClient(ipAddress, Port);
+        try
+        {
+            Senders.Add(ipAddress, sender);
+        }
+        catch
+        {
+            Console.WriteLine($"{ipAddress} is already a sender!");
+        }
     }
 }
