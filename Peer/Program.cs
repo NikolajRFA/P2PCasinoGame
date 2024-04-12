@@ -32,7 +32,7 @@ public class Program
                 if (approval.Equals("ok"))
                 {
                     Console.WriteLine("Ready to send messages");
-                    break;   
+                    break;
                 }
             }
 
@@ -89,7 +89,7 @@ public class Program
                 NewSender(senderIp);
             foreach (var sender in Senders)
             {
-                SendMessage(sender.Value, string.Join(":", Senders.Select(x => x.Key)));
+                SendMessage(sender.Value, "IP:" + string.Join(";", Senders.Select(x => x.Key)));
             }
 
             var clientThread = new Thread(HandleClientComm);
@@ -123,6 +123,17 @@ public class Program
             var dataReceived = Encoding.ASCII.GetString(message, 0, bytesRead);
             Console.WriteLine($"Received: {dataReceived}");
             if (dataReceived.StartsWith("ADD")) GameState += int.Parse(dataReceived.Split(":").Last());
+            if (dataReceived.StartsWith("IP"))
+            {
+                var ips = dataReceived.Split(":").Last().Split(";");
+                foreach (var ip in ips)
+                {
+                    if (!Senders.ContainsKey(ip))
+                    {
+                        NewSender(ip);
+                    }
+                }
+            }
             Console.WriteLine($"Game state is {GameState}");
         }
 
