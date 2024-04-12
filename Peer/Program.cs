@@ -11,6 +11,7 @@ public class Program
     public const int Port = 8000;
     public static int GameState;
     public static Dictionary<string, TcpClient> Senders = new();
+    public static string MyIp;
 
     public static void Main(string[] args)
     {
@@ -47,10 +48,7 @@ public class Program
         {
             var message = Console.ReadLine() ?? "";
             if (message == "QUIT") break;
-            foreach (var sender in Senders)
-            {
-                SendMessage(sender.Value, message);
-            }
+            Broadcast(Senders.Select(x => x.Value).ToList(), message);
         }
 
         foreach (var sender in Senders)
@@ -61,12 +59,16 @@ public class Program
         Environment.Exit(1);
     }
 
+    private static void Broadcast(List<TcpClient> clients, string message)
+    {
+        if (message.StartsWith("ADD")) GameState += int.Parse(message.Split(":").Last());
+        foreach (var tcpClient in clients)
+        {
+            SendMessage(tcpClient, message);
+        }
+    }
     private static void SendMessage(TcpClient client, string message)
     {
-        if (message.StartsWith("ADD"))
-            GameState += int.Parse(message.Split(":").Last());
-
-
         var data = Encoding.ASCII.GetBytes(message);
         var stream = client.GetStream();
         stream.Write(data, 0, data.Length);
@@ -76,6 +78,7 @@ public class Program
     {
         var port = 8000;
         var server = new TcpListener(IPAddress.Any, port);
+        MyIp = server.LocalEndpoint.ToString().Split(":").First();
         server.Start();
         Console.WriteLine($"Server started on port {port}");
 
@@ -134,6 +137,7 @@ public class Program
                     }
                 }
             }
+
             Console.WriteLine($"Game state is {GameState}");
         }
 
@@ -142,14 +146,8 @@ public class Program
 
     public static void NewSender(string ipAddress)
     {
+        if (ipAddress.Equals(MyIp)) return;
         var sender = new TcpClient(ipAddress, Port);
-        try
-        {
-            Senders.Add(ipAddress, sender);
-        }
-        catch
-        {
-            Console.WriteLine($"{ipAddress} is already a sender!");
-        }
+        Senders.Add(ipAddress, sender);
     }
 }
