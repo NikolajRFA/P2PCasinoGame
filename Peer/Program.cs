@@ -15,6 +15,7 @@ public class Program
 
     public static void Main(string[] args)
     {
+        MyIp = Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString();
         var command = "";
         var receiver = new Thread(Receiver);
         //Thread client = new Thread(Client);
@@ -70,7 +71,7 @@ public class Program
 
     private static void SendMessage(TcpClient client, string message)
     {
-        var data = Encoding.ASCII.GetBytes(MyIp + " : " + message);
+        var data = Encoding.ASCII.GetBytes(message);
         var stream = client.GetStream();
         stream.Write(data, 0, data.Length);
     }
@@ -80,8 +81,6 @@ public class Program
         var port = 8000;
         var server = new TcpListener(IPAddress.Any, port);
         server.Start();
-        var ipEndpoint = server.LocalEndpoint as IPEndPoint;
-        MyIp = ipEndpoint.Address.ToString();
         Console.WriteLine($"Server started on port {port}");
 
         while (true)
