@@ -79,8 +79,9 @@ public class Program
     {
         var port = 8000;
         var server = new TcpListener(IPAddress.Any, port);
-        MyIp = server.LocalEndpoint.ToString().Split(":").First();
         server.Start();
+        var ipEndpoint = server.LocalEndpoint as IPEndPoint;
+        MyIp = ipEndpoint.Address.ToString();
         Console.WriteLine($"Server started on port {port}");
 
         while (true)
@@ -122,7 +123,8 @@ public class Program
             if (bytesRead == 0) break;
 
             var dataReceived = Encoding.ASCII.GetString(message, 0, bytesRead);
-            Console.WriteLine($"Received: {dataReceived}");
+            var remoteIp = tcpClient.Client.RemoteEndPoint.ToString().Split(":").First();
+            Console.WriteLine($"{remoteIp} Received: {dataReceived}");
             if (dataReceived.StartsWith("ADD")) GameState += int.Parse(dataReceived.Split(":").Last());
             if (dataReceived.StartsWith("IP"))
             {
