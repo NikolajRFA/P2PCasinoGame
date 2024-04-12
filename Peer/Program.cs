@@ -148,5 +148,6 @@ public class Program
         if (ipAddress.Equals(MyIp)) return;
         var sender = new TcpClient(ipAddress, Port);
         Senders.Add(ipAddress, sender);
+        Console.WriteLine($"New sender added with ip: {ipAddress}");
     }
 }
