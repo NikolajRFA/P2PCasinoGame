@@ -14,14 +14,33 @@ public class Program
 
     public static void Main(string[] args)
     {
+        var command = "";
         var receiver = new Thread(Receiver);
         //Thread client = new Thread(Client);
         receiver.Start();
         //client.Start();
         //192.168.155.21
-        Console.Write("IP Address: ");
-        var serverIp = Console.ReadLine();
-        NewSender(serverIp);
+        //Console.Write("IP Address: ");
+        // var senderIp = client.Client.RemoteEndPoint!.ToString()!.Split(":").First();
+        while (true)
+        {
+            Console.WriteLine("Do you want to >await< or create a connection >manually<?");
+            command = Console.ReadLine();
+            if (command.Equals("await"))
+            {
+                var approval = Console.ReadLine();
+                if(approval.Equals("ok"))
+                {
+                    NewSender(Senders.Keys.Last());
+                }
+                break;
+            }
+
+            if (!command.Equals("manually")) continue;
+            var serverIp = Console.ReadLine();
+            NewSender(serverIp);
+            break;
+        }
 
         while (true)
         {
@@ -37,6 +56,7 @@ public class Program
         {
             sender.Value.Close();
         }
+
         Environment.Exit(1);
     }
 
@@ -70,6 +90,7 @@ public class Program
             {
                 SendMessage(sender.Value, string.Join(":", Senders.Select(x => x.Key)));
             }
+
             var clientThread = new Thread(HandleClientComm);
             clientThread.Start(client);
         }
