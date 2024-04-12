@@ -29,14 +29,15 @@ public class Program
             if (command.Equals("await"))
             {
                 var approval = Console.ReadLine();
-                if(approval.Equals("ok"))
+                if (approval.Equals("ok"))
                 {
-                    NewSender(Senders.Keys.Last());
+                    Console.WriteLine("Ready to send messages");
+                    break;   
                 }
-                break;
             }
 
             if (!command.Equals("manually")) continue;
+            Console.WriteLine("Enter the ip you want to manually connect to");
             var serverIp = Console.ReadLine();
             NewSender(serverIp);
             break;
