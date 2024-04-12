@@ -2,6 +2,7 @@
 
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Peer;
@@ -11,7 +12,7 @@ public class Program
     public const int Port = 8000;
     public static int GameState;
     public static Dictionary<string, TcpClient> Senders = new();
-    public static string MyIp;
+    public static string MyIp = "172.29.0.10";
 
     public static void Main(string[] args)
     {
@@ -20,8 +21,9 @@ public class Program
 
         // Filter out IPv4 addresses
         IPAddress[] ipv4Addresses = addresses.Where(address => address.AddressFamily == AddressFamily.InterNetwork).ToArray();
-        MyIp = ipv4Addresses[0].ToString();
-        
+        //MyIp = ipv4Addresses[0].ToString();
+
+        Console.WriteLine($"I am {MyIp}");
         var command = "";
         var receiver = new Thread(Receiver);
         //Thread client = new Thread(Client);
@@ -73,6 +75,7 @@ public class Program
         {
             SendMessage(tcpClient, message);
         }
+        Console.WriteLine($"GameState: {GameState}");
     }
 
     private static void SendMessage(TcpClient client, string message)
@@ -149,9 +152,9 @@ public class Program
         tcpClient.Close();
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public static void NewSender(string ipAddress)
     {
-        Console.WriteLine($"MyIp: {MyIp} \n ipAddress: {ipAddress}");
         if (ipAddress.Equals(MyIp) || Senders.ContainsKey(ipAddress)) return;
         var sender = new TcpClient(ipAddress, Port);
         Senders.Add(ipAddress, sender);
