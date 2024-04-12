@@ -67,9 +67,10 @@ public class Program
             SendMessage(tcpClient, message);
         }
     }
+
     private static void SendMessage(TcpClient client, string message)
     {
-        var data = Encoding.ASCII.GetBytes(message);
+        var data = Encoding.ASCII.GetBytes(MyIp + " : " + message);
         var stream = client.GetStream();
         stream.Write(data, 0, data.Length);
     }
@@ -90,11 +91,8 @@ public class Program
             var senderIp = client.Client.RemoteEndPoint!.ToString()!.Split(":").First();
             if (!Senders.ContainsKey(senderIp))
                 NewSender(senderIp);
-            foreach (var sender in Senders)
-            {
-                SendMessage(sender.Value, "IP:" + string.Join(";", Senders.Select(x => x.Key)));
-            }
-
+            var message = "IP:" + string.Join(";", Senders.Select(x => x.Key));
+            Broadcast(Senders.Select(x => x.Value).ToList(), message);
             var clientThread = new Thread(HandleClientComm);
             clientThread.Start(client);
         }
