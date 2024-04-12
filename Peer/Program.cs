@@ -15,7 +15,13 @@ public class Program
 
     public static void Main(string[] args)
     {
-        MyIp = Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString();
+        // Get all IP addresses associated with the host
+        IPAddress[] addresses = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+
+        // Filter out IPv4 addresses
+        IPAddress[] ipv4Addresses = addresses.Where(address => address.AddressFamily == AddressFamily.InterNetwork).ToArray();
+        MyIp = ipv4Addresses[0].ToString();
+        
         var command = "";
         var receiver = new Thread(Receiver);
         //Thread client = new Thread(Client);
@@ -145,6 +151,7 @@ public class Program
 
     public static void NewSender(string ipAddress)
     {
+        Console.WriteLine($"MyIp: {MyIp} \n ipAddress: {ipAddress}");
         if (ipAddress.Equals(MyIp) || Senders.ContainsKey(ipAddress)) return;
         var sender = new TcpClient(ipAddress, Port);
         Senders.Add(ipAddress, sender);
