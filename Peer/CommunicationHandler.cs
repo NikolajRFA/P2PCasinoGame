@@ -10,12 +10,8 @@ public class CommunicationHandler : ICommunicationHandler
     public static void Ips(List<string> ips)
     {
         foreach (var ip in ips)
-        {
-            if (!Program.Senders.ContainsKey(ip))
-            {
-                Program.NewSender(ip);
-            }
-        }
+            if (!Outbound.Senders.ContainsKey(ip))
+                Outbound.NewSender(ip);
     }
 
     public static string GetMethod(string data)
