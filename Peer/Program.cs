@@ -145,7 +145,7 @@ public class Program
 
     public static void NewSender(string ipAddress)
     {
-        if (ipAddress.Equals(MyIp)) return;
+        if (ipAddress.Equals(MyIp) || Senders.ContainsKey(ipAddress)) return;
         var sender = new TcpClient(ipAddress, Port);
         Senders.Add(ipAddress, sender);
         Console.WriteLine($"New sender added with ip: {ipAddress}");
