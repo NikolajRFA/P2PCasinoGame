@@ -133,18 +133,11 @@ public class Program
             var dataReceived = Encoding.ASCII.GetString(message, 0, bytesRead);
             var remoteIp = tcpClient.Client.RemoteEndPoint.ToString().Split(":").First();
             Console.WriteLine($"{remoteIp} Received: {dataReceived}");
-            if (dataReceived.StartsWith("ADD")) GameState += int.Parse(dataReceived.Split(":").Last());
-            if (dataReceived.StartsWith("IP"))
-            {
-                var ips = dataReceived.Split(":").Last().Split(";");
-                foreach (var ip in ips)
-                {
-                    if (!Senders.ContainsKey(ip))
-                    {
-                        NewSender(ip);
-                    }
-                }
-            }
+            var (method, data) = CommunicationHandler.GetPayload(dataReceived);
+            if (method.StartsWith("ADD")) 
+                CommunicationHandler.Add(int.Parse(data));
+            if (method.StartsWith("IP"))
+                CommunicationHandler.Ips(CommunicationHandler.GetListFromParameters(data));
 
             Console.WriteLine($"Game state is {GameState}");
         }
