@@ -20,9 +20,23 @@ public class Table
         var kvp = Cards[index];
         var cardValues = GameState.CardToValue(card);
 
-        if (!cardValues.Any(cardValue => kvp.Value.Any(tableValue => cardValue + tableValue == value))) return false;
+        if (!CompareValues(kvp.Value, cardValues, value)) return false;
 
         kvp.Key.PlaceOnTop(card);
+        kvp.Value.Clear();
+        kvp.Value.Add(value);
         return true;
+    }
+
+    public bool BuildTable(int index1, int index2, int value)
+    {
+        var cards1 = Cards[index1].Value;
+        var cards2 = Cards[index2].Value;
+        return CompareValues(cards1, cards2, value);
+    }
+
+    private bool CompareValues(IEnumerable<int> values1, IEnumerable<int> values2, int value)
+    {
+        return values1.Any(cardValue => values2.Any(tableValue => cardValue + tableValue == value));
     }
 }
