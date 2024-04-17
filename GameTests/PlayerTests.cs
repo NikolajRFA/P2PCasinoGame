@@ -51,7 +51,8 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player();
-        player.PlaceCard(new StandardPlayingCard(Rank.Ace, Suit.Clubs));
+        player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Clubs));
+        player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Diamonds));
         Assert.True(player.Build(table, 0, 0, 4));
     }
@@ -61,7 +62,8 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player();
-        player.PlaceCard(new StandardPlayingCard(Rank.Three, Suit.Hearts));
+        player.Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Hearts));
+        player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Hearts));
         Assert.True(player.Build(table, 0, 0, 4));
     }
@@ -71,7 +73,8 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player();
-        player.PlaceCard(new StandardPlayingCard(Rank.Ace, Suit.Clubs));
+        player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Clubs));
+        player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Hearts));
         Assert.True(player.Build(table, 0, 0, 2));
     }
@@ -81,7 +84,8 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player();
-        player.PlaceCard(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
+        player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Clubs));
         Assert.False(player.Build(table, 0, 0, 12));
     }
@@ -91,8 +95,10 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player();
-        player.PlaceCard(new StandardPlayingCard(Rank.Four, Suit.Hearts));
-        player.PlaceCard(new StandardPlayingCard(Rank.Four, Suit.Diamonds));
+        player.Hand.Add(new StandardPlayingCard(Rank.Four, Suit.Hearts));
+        player.PlaceCard(table, 0);
+        player.Hand.Add(new StandardPlayingCard(Rank.Four, Suit.Diamonds));
+        player.PlaceCard(table, 0);
         Assert.True(player.BuildTable(table, 0, 1, 8));
     }
 
@@ -105,7 +111,8 @@ public class PlayerTests
         pile.PlaceOnTop(new StandardPlayingCard(Rank.Four, Suit.Clubs));
         pile.PlaceOnTop(new StandardPlayingCard(Rank.Four, Suit.Diamonds));
         table.Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(pile, [8]));
-        player.PlaceCard(new StandardPlayingCard(Rank.Two, Suit.Clubs));
+        player.Hand.Add(new StandardPlayingCard(Rank.Two, Suit.Clubs));
+        player.PlaceCard(table, 0);
         Assert.True(player.BuildTable(table, 0, 1, 10));
     }
 }
