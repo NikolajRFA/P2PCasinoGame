@@ -91,7 +91,8 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player();
-        player.PlaceCard(table, new StandardPlayingCard(Rank.Five, Suit.Diamonds));
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
+        player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Clubs));
         Assert.False(player.Build(table, 0, 0, 12));
     }
