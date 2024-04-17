@@ -37,9 +37,9 @@ public class Player
         return CompareValues(cards1, cards2, value);
     }
 
-    public bool Take(Table table, int index, StandardPlayingCard card)
+    public bool Take(Table table, int index, int handIndex)
     {
-        if (table.Cards[index].Value.Any(x => GameState.CardToValue(card).Any(y => x == y)))
+        if (table.Cards[index].Value.Any(x => GameState.CardToValue(Hand[handIndex]).Any(y => x == y)))
         {
             foreach (var tableCard in table.Cards[index].Key.Cards)
             {
@@ -47,6 +47,7 @@ public class Player
             }
 
             if (table.Cards.Count == 1) ClearCount++;
+            Hand.RemoveAt(handIndex);
             table.Cards.RemoveAt(index);
             return true;
         }
