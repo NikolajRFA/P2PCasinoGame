@@ -25,7 +25,7 @@ public class PlayerTests
         var player = new Player { Name = "Alex" };
         player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Hearts));
         player.PlaceCard(table, 0);
-        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
+        player.Hand.Add(new StandardPlayingCard(Rank.Six, Suit.Diamonds));
 
         Assert.False(player.Take(table, 0, 0));
     }
