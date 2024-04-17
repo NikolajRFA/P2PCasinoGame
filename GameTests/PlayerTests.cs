@@ -11,9 +11,11 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player { Name = "Alex" };
-        player.PlaceCard(new StandardPlayingCard(Rank.Five, Suit.Hearts));
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Hearts));
+        player.PlaceCard(table, 0);
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
 
-        Assert.True(player.Take(table, 0, new StandardPlayingCard(Rank.Five, Suit.Diamonds)));
+        Assert.True(player.Take(table, 0, 0));
     }
 
     [Fact]
@@ -21,9 +23,11 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player { Name = "Alex" };
-        player.PlaceCard(new StandardPlayingCard(Rank.Five, Suit.Hearts));
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Hearts));
+        player.PlaceCard(table, 0);
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
 
-        Assert.False(player.Take(table, 0, new StandardPlayingCard(Rank.Six, Suit.Diamonds)));
+        Assert.False(player.Take(table, 0, 0));
     }
 
     [Fact]
@@ -31,9 +35,11 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player();
-        player.PlaceCard(new StandardPlayingCard(Rank.Five, Suit.Clubs));
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Clubs));
+        player.PlaceCard(table, 0);
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Spades));
 
-        Assert.True(player.ClearTable(table, new StandardPlayingCard(Rank.Five, Suit.Spades)));
+        Assert.True(player.ClearTable(table, 0));
     }
 
     [Fact]
@@ -41,9 +47,10 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player();
-        player.PlaceCard(new StandardPlayingCard(Rank.Two, Suit.Clubs));
+        player.Hand.Add(new StandardPlayingCard(Rank.Two, Suit.Clubs));
+        player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Clubs));
-        Assert.True(player.Build(table,0, 0, 5));
+        Assert.True(player.Build(table, 0, 0, 5));
     }
 
     [Fact]
@@ -81,7 +88,7 @@ public class PlayerTests
     {
         var table = new Table();
         var player = new Player();
-        player.PlaceCard(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
+        player.PlaceCard(table, new StandardPlayingCard(Rank.Five, Suit.Diamonds));
         player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Clubs));
         Assert.False(player.Build(table, 0, 0, 12));
     }

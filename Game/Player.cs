@@ -58,13 +58,14 @@ public class Player
         return false;
     }
 
-    public bool ClearTable(Table table, StandardPlayingCard standardPlayingCard)
+    public bool ClearTable(Table table, int handIndex)
     {
+        if (Hand[handIndex] != new StandardPlayingCard(Rank.Five, Suit.Spades)) return false;
         foreach (var card in table.Cards)
         {
             PointPile.AddRange(card.Key.Cards);
         }
-
+        Hand.RemoveAt(handIndex);
         table.Cards.Clear();
         return true;
     }
