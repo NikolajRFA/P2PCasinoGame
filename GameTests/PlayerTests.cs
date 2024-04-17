@@ -24,4 +24,14 @@ public class PlayerTests
         
         Assert.False(player.Take(table, 0, new StandardPlayingCard(Rank.Six, Suit.Diamonds)));
     }
+
+    [Fact]
+    public void ClearTable_PlayerPlays5OfSpades_True()
+    {
+        var table = new Table();
+        table.AddCard(new StandardPlayingCard(Rank.Five, Suit.Clubs));
+        var player = new Player();
+        
+        Assert.True(player.ClearTable(table, new StandardPlayingCard(Rank.Five, Suit.Spades)));
+    }
 }
