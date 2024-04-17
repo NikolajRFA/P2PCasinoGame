@@ -1,4 +1,5 @@
-﻿using Xyaneon.Games.Cards.StandardPlayingCards;
+﻿using Xyaneon.Games.Cards;
+using Xyaneon.Games.Cards.StandardPlayingCards;
 
 namespace Game;
 
@@ -9,11 +10,13 @@ public class Player
     public List<StandardPlayingCard> PointPile { get; set; } = [];
     public int ClearCount { get; set; }
 
-    public bool PlaceCard(StandardPlayingCard card)
+    public bool PlaceCard(Table table, int handIndex)
     {
         var drawPile = new DrawPile<StandardPlayingCard>(isFaceUp: true);
-        drawPile.PlaceOnTop(card);
-        Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(drawPile, GameState.CardToValue(card)));
+        drawPile.PlaceOnTop(Hand[handIndex]);
+        table.Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(drawPile, GameState.CardToValue(Hand[handIndex])));
+        Hand.RemoveAt(handIndex);
+        
         return true;
     }
 
