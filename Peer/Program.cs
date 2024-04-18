@@ -35,8 +35,7 @@ public class Program
                 var approval = Console.ReadLine();
                 if (approval.Equals("ok"))
                 {
-                    GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).ToList());
-                    GameState.Setup();
+                    GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).ToList());
                     Outbound.Broadcast($"GAMESTATE:{GameState.Serialize()}");
                     Console.WriteLine("GameState has been setup");
                     break;

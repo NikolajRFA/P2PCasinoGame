@@ -17,8 +17,15 @@ public class GameStateTests
     public void Constructor_3Players_3PlayersReceive4CardsEachAndTableHas4Cards()
     {
         var gameState = new GameState(["Alex", "Nikolaj", "Laust"]);
-        gameState.Players.ForEach(player => Assert.True(player.Hand.Count == 4));
-        Assert.True(gameState.Table.Cards.Count == 4);
+        gameState.Players.ForEach(player =>
+        {
+            _testOutputHelper.WriteLine($"Player: {player.Name} has cards {string.Join(" ,", player.Hand)}");
+            Assert.True(player.Hand.Count == 4);
+        });
+        gameState.Table.Cards.ForEach(kvp =>
+        {
+            Assert.NotEmpty(kvp.Key.Cards);
+        });
     }
 
     [Fact]

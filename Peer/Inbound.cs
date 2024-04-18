@@ -57,7 +57,7 @@ public class Inbound
             if (method.StartsWith("IP"))
                 CommunicationHandler.Ips(CommunicationHandler.GetListFromParameters(data));
 
-            Console.WriteLine($"Game state is {Program.GameState.Serialize()}");
+            //Console.WriteLine($"Game state is {Program.GameState.Serialize()}");
         }
 
         tcpClient.Close();
