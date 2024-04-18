@@ -12,7 +12,7 @@ public class Table
         foreach (var card in cards)
         {
             Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(
-                new DrawPile<StandardPlayingCard>(isFaceUp: true), GameState.CardToValue(card)
+                new DrawPile<StandardPlayingCard>(isFaceUp: true), GameState.CardToValue(card).Item1
             ));
         }
     }

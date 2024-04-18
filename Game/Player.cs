@@ -14,7 +14,7 @@ public class Player
     {
         var drawPile = new DrawPile<StandardPlayingCard>(isFaceUp: true);
         drawPile.PlaceOnTop(Hand[handIndex]);
-        table.Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(drawPile, GameState.CardToValue(Hand[handIndex])));
+        table.Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(drawPile, GameState.CardToValue(Hand[handIndex]).Item1));
         Hand.RemoveAt(handIndex);
         
         return true;
@@ -23,7 +23,7 @@ public class Player
     public bool Build(Table table, int index, int handIndex, int value)
     {
         var kvp = table.Cards[index];
-        var cardValues = GameState.CardToValue(Hand[handIndex]);
+        var cardValues = GameState.CardToValue(Hand[handIndex]).Item1;
 
         if (!CompareValues(kvp.Value, cardValues, value)) return false;
 
@@ -42,7 +42,7 @@ public class Player
 
     public bool Take(Table table, int index, int handIndex)
     {
-        if (table.Cards[index].Value.Any(x => GameState.CardToValue(Hand[handIndex]).Any(y => x == y)))
+        if (table.Cards[index].Value.Any(x => GameState.CardToValue(Hand[handIndex]).Item1.Any(y => x == y)))
         {
             foreach (var tableCard in table.Cards[index].Key.Cards)
             {
