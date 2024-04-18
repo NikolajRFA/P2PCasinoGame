@@ -16,7 +16,7 @@ public class CommunicationHandler : ICommunicationHandler
 
     public static string GetParameters(string data)
     {
-        return data.Split(":").First();
+        return data.Split(":").Last();
     }
 
     public static List<string> GetListFromParameters(string parameters)
