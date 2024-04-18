@@ -19,13 +19,11 @@ public class GameStateTests
         var gameState = new GameState(["Alex", "Nikolaj", "Laust"]);
         gameState.Players.ForEach(player =>
         {
-            _testOutputHelper.WriteLine($"Player: {player.Name} has cards {string.Join(" ,", player.Hand)}");
+            _testOutputHelper.WriteLine(
+                $"Player: {player.Name} has cards {string.Join(", ", player.Hand.Select(card => $"{card.Rank} of {card.Suit}"))}");
             Assert.True(player.Hand.Count == 4);
         });
-        gameState.Table.Cards.ForEach(kvp =>
-        {
-            Assert.NotEmpty(kvp.Key.Cards);
-        });
+        gameState.Table.Cards.ForEach(kvp => Assert.NotEmpty(kvp.Key.Cards));
     }
 
     [Fact]
