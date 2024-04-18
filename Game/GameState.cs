@@ -7,8 +7,8 @@ public class GameState
 {
     public List<Player> Players { get; set; }
     public Table Table { get; set; }
-    public DrawPile<StandardPlayingCard> Cards { get; set; } = new StandardPlayingCardDeck();
     public int IndexOfNextPlayer { get; set; }
+    public StandardPlayingCardDeck Deck = new();
 
     public static List<int> CardToValue(StandardPlayingCard card)
     {
@@ -19,5 +19,16 @@ public class GameState
             { Rank: Rank.Ace } => [1, 14],
             _ => [Convert.ToInt32(card.Rank)]
         };
+    }
+
+    public void Setup()
+    {
+        Deck.Shuffle();
+        Deal();
+    }
+
+    public void Deal()
+    {
+        //    for
     }
 }
