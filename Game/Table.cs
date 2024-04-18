@@ -7,10 +7,13 @@ public class Table
 {
     public List<KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>> Cards { get; set; } = [];
 
-    public void AddCard(StandardPlayingCard card)
+    public void AddCards(IEnumerable<StandardPlayingCard> cards)
     {
-        Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(
-            new DrawPile<StandardPlayingCard>(isFaceUp: true), GameState.CardToValue(card)
-        ));
+        foreach (var card in cards)
+        {
+            Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(
+                new DrawPile<StandardPlayingCard>(isFaceUp: true), GameState.CardToValue(card)
+            ));
+        }
     }
 }
