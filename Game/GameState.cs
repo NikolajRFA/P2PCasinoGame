@@ -1,14 +1,19 @@
-﻿using Xyaneon.Games.Cards;
-using Xyaneon.Games.Cards.StandardPlayingCards;
+﻿using Xyaneon.Games.Cards.StandardPlayingCards;
 
 namespace Game;
 
 public class GameState
 {
-    public List<Player> Players { get; set; }
-    public Table Table { get; set; }
+    public List<Player> Players { get; set; } = [];
+    public Table Table { get; set; } = new();
     public int IndexOfNextPlayer { get; set; }
     public StandardPlayingCardDeck Deck = new();
+
+    public GameState(List<string> players)
+    {
+        players.ForEach(player => Players.Add(new Player{Name = player}));
+        Setup();
+    }
 
     public static List<int> CardToValue(StandardPlayingCard card)
     {
@@ -25,10 +30,16 @@ public class GameState
     {
         Deck.Shuffle();
         Deal();
+        var fourCards = Deck.DrawAtMost(4);
+        Table.AddCards(fourCards);
     }
 
     public void Deal()
     {
-        //    for
+        Players.ForEach(player =>
+        {
+            var fourCards = Deck.DrawAtMost(4);
+            player.Hand.AddRange(fourCards);
+        });
     }
 }
