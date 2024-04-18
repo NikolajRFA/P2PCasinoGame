@@ -9,7 +9,8 @@ public class Table
 
     public void AddCard(StandardPlayingCard card)
     {
-        
+        Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(
+            new DrawPile<StandardPlayingCard>(isFaceUp: true), GameState.CardToValue(card)
+        ));
     }
-
 }
