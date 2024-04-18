@@ -6,7 +6,7 @@ public class GameState
 {
     public List<Player> Players { get; set; } = [];
     public Table Table { get; set; } = new();
-    public int IndexOfNextPlayer { get; set; }
+    public int CurrentPlayer { get; set; }
     public StandardPlayingCardDeck Deck = new();
 
     public GameState(List<string> players)
@@ -63,5 +63,11 @@ public class GameState
             output.Add((player, points));
         });
         return output;
+    }
+
+    public void AdvanceTurn()
+    {
+        if (CurrentPlayer < Players.Count - 1) CurrentPlayer++;
+        else CurrentPlayer = 0;
     }
 }
