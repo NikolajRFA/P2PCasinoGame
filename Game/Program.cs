@@ -9,9 +9,10 @@ for (int i = 0; i < 48/gameState.Players.Count/4; i++)
     {
         for (int k = 0; k < gameState.Players.Count; k++)
         {
-            Console.ReadLine();
+            Console.WriteLine($"{gameState.Players[k].Name}");
         }
     }
     
     gameState.Deal();
+    Console.WriteLine($"GameState: {gameState.Serialize()}");
 }

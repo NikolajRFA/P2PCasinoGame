@@ -2,14 +2,16 @@
 
 using System.Net;
 using System.Net.Sockets;
+using Game;
 
 namespace Peer;
 
 public class Program
 {
     public const int Port = 8000;
-    public static int GameState { get; set; }
+    //public static int GameState { get; set; }
     public static string MyIp = "172.29.0.10";
+    public static GameState GameState { get; set; }
 
     public static void Main(string[] args)
     {
@@ -33,7 +35,10 @@ public class Program
                 var approval = Console.ReadLine();
                 if (approval.Equals("ok"))
                 {
-                    Console.WriteLine("Ready to send messages");
+                    GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).ToList());
+                    GameState.Setup();
+                    Outbound.Broadcast($"GAMESTATE:{GameState.Serialize()}");
+                    Console.WriteLine("GameState has been setup");
                     break;
                 }
             }
@@ -49,7 +54,7 @@ public class Program
         {
             var message = Console.ReadLine() ?? "";
             if (message == "QUIT") break;
-            Outbound.Broadcast(Outbound.Senders.Select(x => x.Value).ToList(), message);
+            Outbound.Broadcast(message);
         }
 
         foreach (var sender in Outbound.Senders) sender.Value.Close();

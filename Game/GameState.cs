@@ -1,4 +1,5 @@
-﻿using Xyaneon.Games.Cards.StandardPlayingCards;
+﻿using System.Text.Json;
+using Xyaneon.Games.Cards.StandardPlayingCards;
 
 namespace Game;
 
@@ -69,5 +70,10 @@ public class GameState
     {
         if (CurrentPlayer < Players.Count - 1) CurrentPlayer++;
         else CurrentPlayer = 0;
+    }
+    
+    public string Serialize()
+    {
+        return JsonSerializer.Serialize(this);
     }
 }

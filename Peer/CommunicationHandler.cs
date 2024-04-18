@@ -2,11 +2,6 @@
 
 public class CommunicationHandler : ICommunicationHandler
 {
-    public static void Add(int amount)
-    {
-        Program.GameState += amount;
-    }
-
     public static void Ips(List<string> ips)
     {
         foreach (var ip in ips)

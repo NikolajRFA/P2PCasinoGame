@@ -8,10 +8,10 @@ public class Outbound
 {
     public static Dictionary<string, TcpClient> Senders = new();
 
-    public static void Broadcast(List<TcpClient> clients, string message)
+    public static void Broadcast(string message)
     {
-        if (message.StartsWith("ADD")) Program.GameState += int.Parse(message.Split(":").Last());
-        foreach (var tcpClient in clients) SendMessage(tcpClient, message);
+        //if (message.StartsWith("ADD")) Program.GameState += int.Parse(message.Split(":").Last());
+        foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
         Console.WriteLine($"GameState: {Program.GameState}");
     }
 

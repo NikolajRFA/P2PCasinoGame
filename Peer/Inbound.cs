@@ -22,7 +22,7 @@ public class Inbound
             if (!Outbound.Senders.ContainsKey(senderIp))
                 Outbound.NewSender(senderIp);
             var message = "IP:" + string.Join(";", Outbound.Senders.Select(x => x.Key));
-            Outbound.Broadcast(Outbound.Senders.Select(x => x.Value).ToList(), message);
+            Outbound.Broadcast(message);
             var clientThread = new Thread(HandleClientComm);
             clientThread.Start(client);
         }
@@ -54,8 +54,6 @@ public class Inbound
             Console.WriteLine($"{remoteIp} Received: {dataReceived}");
             // Handle commands
             var (method, data) = CommunicationHandler.GetPayload(dataReceived);
-            if (method.StartsWith("ADD"))
-                CommunicationHandler.Add(int.Parse(data));
             if (method.StartsWith("IP"))
                 CommunicationHandler.Ips(CommunicationHandler.GetListFromParameters(data));
 
