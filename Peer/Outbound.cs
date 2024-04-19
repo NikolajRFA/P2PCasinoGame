@@ -12,7 +12,6 @@ public class Outbound
     {
         //if (message.StartsWith("ADD")) Program.GameState += int.Parse(message.Split(":").Last());
         foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
-        Console.WriteLine($"GameState: {Program.GameState}");
     }
 
     private static void SendMessage(TcpClient client, string message)
