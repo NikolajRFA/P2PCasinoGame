@@ -96,7 +96,7 @@ namespace Xyaneon.Games.Cards
         /// is supposed to be face-up (<see langword="true"/>) or face-down
         /// (<see langword="false"/>).
         /// </summary>
-        public bool IsFaceUp { get; }
+        public bool IsFaceUp { get; set; }
 
         #endregion // End properties region.
 

@@ -46,7 +46,13 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
         /// consider using the <see cref="DrawPile{TCard}"/> base class
         /// instead.
         /// </remarks>
-        public StandardPlayingCardDeck(bool isFaceUp = false, int numberOfJokers = 0) : base(Create52StandardPlayingCards(numberOfJokers), isFaceUp) { }
+        public StandardPlayingCardDeck(bool isFaceUp = false, int numberOfJokers = 0) : base(Create52StandardPlayingCards(numberOfJokers), isFaceUp)
+        {
+            IsFaceUp = isFaceUp;
+            NumberOfJokers = numberOfJokers;
+        }
+
+        public int NumberOfJokers { get; set; }
 
         #endregion // End constructors region.
 
