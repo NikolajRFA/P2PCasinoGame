@@ -15,17 +15,17 @@ public class CommunicationHandler : ICommunicationHandler
         return data.Split(ProtocolSplit).First();
     }
 
-    public static string GetParameters(string data)
+    public static List<string> GetParameters(string data)
     {
-        return data.Split(ProtocolSplit).Last();
+        return data.Split(ProtocolSplit).Last().Split(";").ToList();
     }
 
-    public static List<string> GetListFromParameters(string parameters)
+    public static List<string> GetIps(string parameters)
     {
         return parameters.Split(";").ToList();
     }
 
-    public static (string, string) GetPayload(string data)
+    public static (string, List<string>) GetPayload(string data)
     {
         return (GetMethod(data), GetParameters(data));
     }

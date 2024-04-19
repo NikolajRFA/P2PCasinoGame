@@ -57,12 +57,8 @@ public class Inbound
             // Handle commands
             var (method, data) = CommunicationHandler.GetPayload(dataReceived);
             if (method.StartsWith("IP"))
-                CommunicationHandler.Ips(CommunicationHandler.GetListFromParameters(data));
-            if (method.StartsWith("PLACECARD"))
-            {
-                Program.GameState.Players[Program.GameState.CurrentPlayer]
-                    .PlaceCard(Program.GameState.Table, int.Parse(data));
-            }
+                CommunicationHandler.Ips(CommunicationHandler.GetIps(string.Join(";", data)));
+            MethodHandler.CallMethod(method, data);
             if (method.StartsWith("GAMESTATE"))
             {
                 Console.WriteLine(data);
@@ -70,7 +66,7 @@ public class Inbound
                 {
                     IncludeFields = true,
                 };
-                Program.GameState = JsonSerializer.Deserialize<GameState>(data, options)!;
+                Program.GameState = JsonSerializer.Deserialize<GameState>(data[0], options)!;
             }
 
             //Console.WriteLine($"Game state is {Program.GameState.Serialize()}");
