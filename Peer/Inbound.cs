@@ -66,7 +66,11 @@ public class Inbound
             if (method.StartsWith("GAMESTATE"))
             {
                 Console.WriteLine(data);
-                Program.GameState = JsonSerializer.Deserialize<GameState>(data)!;
+                var options = new JsonSerializerOptions
+                {
+                    IncludeFields = true,
+                };
+                Program.GameState = JsonSerializer.Deserialize<GameState>(data, options)!;
             }
 
             //Console.WriteLine($"Game state is {Program.GameState.Serialize()}");
