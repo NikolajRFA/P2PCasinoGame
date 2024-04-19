@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using Game;
 
 namespace Peer;
@@ -17,6 +18,8 @@ public class Outbound
             Program.GameState.Players[Program.GameState.CurrentPlayer]
                 .PlaceCard(Program.GameState.Table, int.Parse(parameters));
         }
+
+        
         //if (message.StartsWith("ADD")) Program.GameState += int.Parse(message.Split(":").Last());
         foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
     }

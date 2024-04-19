@@ -49,6 +49,12 @@ public class Program
             break;
         }
 
+        while (GameState == null)
+        {
+            Thread.Sleep(500);
+            Console.WriteLine("Waiting for game to start...");
+        }
+
         if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
         {
             var message = Console.ReadLine() ?? "";

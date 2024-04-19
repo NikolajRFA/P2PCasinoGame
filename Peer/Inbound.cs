@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
+using Game;
 
 namespace Peer;
 
@@ -56,6 +58,15 @@ public class Inbound
             var (method, data) = CommunicationHandler.GetPayload(dataReceived);
             if (method.StartsWith("IP"))
                 CommunicationHandler.Ips(CommunicationHandler.GetListFromParameters(data));
+            if (method.StartsWith("PLACECARD"))
+            {
+                Program.GameState.Players[Program.GameState.CurrentPlayer]
+                    .PlaceCard(Program.GameState.Table, int.Parse(data));
+            }
+            if (method.StartsWith("GAMESTATE"))
+            {
+                Program.GameState = JsonSerializer.Deserialize<GameState>(data)!;
+            }
 
             //Console.WriteLine($"Game state is {Program.GameState.Serialize()}");
         }
