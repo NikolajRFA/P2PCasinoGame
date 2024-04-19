@@ -10,6 +10,11 @@ public class GameState
     public int CurrentPlayer { get; set; }
     public StandardPlayingCardDeck Deck = new();
 
+    public GameState()
+    {
+        // Deserialization constructor
+    }
+    
     public GameState(List<string> players)
     {
         players.ForEach(player => Players.Add(new Player { Name = player }));
