@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Game;
 using Xunit.Abstractions;
 using Xyaneon.Games.Cards.StandardPlayingCards;
@@ -32,5 +33,16 @@ public class GameStateTests
         var gameState = new GameState(["Alex"]);
         gameState.Players[0].PointPile.AddRange(new StandardPlayingCardDeck().Cards);
         Assert.Equal(11, gameState.SumPoints()[0].Item2);
+    }
+
+    [Fact]
+    public void SerializeDeserialize_GameState_EqualsAfterDeserialization()
+    {
+        var gameState = new GameState(["Alex", "Nikolaj"]);
+        var json = gameState.Serialize();
+        var gameStateDeserialized =
+            JsonSerializer.Deserialize<GameState>(json, new JsonSerializerOptions { IncludeFields = true });
+        
+        Assert.Equal(gameState, gameStateDeserialized);
     }
 }
