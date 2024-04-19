@@ -11,20 +11,21 @@ public class MethodHandler
         ClearTable
     }
 
-    public static void CallMethod(string methodString, List<int> inputs)
+    public static void CallMethod(string methodString, List<string> inputs)
     {
         if (Enum.TryParse(methodString, out MethodHandler.MethodType method))
         {
+            List<int> parsedInputs = inputs.Select(int.Parse).ToList();
             switch (method)
             {
                 case MethodType.PlaceCard:
                     Program.GameState.Players[Program.GameState.CurrentPlayer]
-                        .PlaceCard(Program.GameState.Table, inputs[0]);
+                        .PlaceCard(Program.GameState.Table, parsedInputs[0]);
                     Console.WriteLine($"PlaceCard method ran with input {inputs[0]}");
                     break;
                 case MethodType.Build:
                     Program.GameState.Players[Program.GameState.CurrentPlayer]
-                        .Build(Program.GameState.Table, inputs[0], inputs[1], inputs[2]);
+                        .Build(Program.GameState.Table, parsedInputs[0], parsedInputs[1], parsedInputs[2]);
                     Console.WriteLine($"Build method ran with input {inputs[0]}, {inputs[1]}, {inputs[2]}");
                     break;
                 // Add cases for other methods as needed

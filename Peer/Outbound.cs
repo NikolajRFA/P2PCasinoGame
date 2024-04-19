@@ -12,15 +12,8 @@ public class Outbound
 
     public static void Broadcast(string message)
     {
-        if (!message.StartsWith("IP"))
-        {
-            var (method, parameters) = CommunicationHandler.GetPayload(message);
-            MethodHandler.CallMethod(method, parameters);
-        }
-        else
-        {
-            Console.WriteLine("IP received no method called");
-        }
+        var (method, parameters) = CommunicationHandler.GetPayload(message);
+        MethodHandler.CallMethod(method, parameters);
         
         //if (message.StartsWith("ADD")) Program.GameState += int.Parse(message.Split(":").Last());
         foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
