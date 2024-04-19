@@ -49,6 +49,16 @@ public class Program
             break;
         }
 
+        if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
+        {
+            var message = Console.ReadLine() ?? "";
+            Outbound.Broadcast(message);
+        }
+        else
+        {
+            Console.WriteLine("Wait for your turn...");
+        }
+        
         while (true)
         {
             var message = Console.ReadLine() ?? "";
