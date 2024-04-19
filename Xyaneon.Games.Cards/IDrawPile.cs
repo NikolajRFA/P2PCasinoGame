@@ -12,13 +12,11 @@ namespace Xyaneon.Games.Cards
     /// </typeparam>
     public interface IDrawPile<TCard> where TCard : Card
     {
-        #region Properties
-
         /// <summary>
         /// Gets a read-only view of the cards currently in this
         /// <see cref="IDrawPile{TCard}"/>.
         /// </summary>
-        IReadOnlyList<TCard> Cards { get; }
+        Stack<TCard> Cards { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="IDrawPile{TCard}"/>
@@ -32,10 +30,6 @@ namespace Xyaneon.Games.Cards
         /// (<see langword="false"/>).
         /// </summary>
         bool IsFaceUp { get; }
-
-        #endregion // End properties region.
-
-        #region Methods
 
         /// <summary>
         /// Draws a single <see cref="Card"/> from the top of this
@@ -251,7 +245,5 @@ namespace Xyaneon.Games.Cards
         /// <paramref name="shuffleAlgorithm"/> is <see langword="null"/>.
         /// </exception>
         void ShuffleIn(IEnumerable<TCard> cards, ShuffleFunction<TCard> shuffleAlgorithm);
-
-        #endregion // End methods region.
     }
 }

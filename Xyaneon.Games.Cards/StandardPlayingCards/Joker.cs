@@ -17,13 +17,9 @@
     /// <seealso cref="StandardPlayingCardDeck"/>
     public class Joker : StandardPlayingCard
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Joker"/> class.
         /// </summary>
         public Joker() : base(Rank.None, Suit.None) { }
-
-        #endregion // End constructors region.
     }
 }

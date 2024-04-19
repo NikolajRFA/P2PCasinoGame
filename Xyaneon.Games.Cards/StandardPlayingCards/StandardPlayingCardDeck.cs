@@ -11,13 +11,7 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
     /// <seealso cref="StandardPlayingCard"/>
     public class StandardPlayingCardDeck : DrawPile<StandardPlayingCard>
     {
-        #region Constants
-
         private const string NumberOfJokersLessThanZeroErrorMessage = "The number of jokers to include in the deck cannot be less than zero.";
-
-        #endregion // End constants region.
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the
@@ -54,11 +48,15 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
 
         public int NumberOfJokers { get; set; }
 
-        #endregion // End constructors region.
-
-        #region Methods
-
-        #region Private methods
+        public void Reverse()
+        {
+            var reversedCards = new Stack<StandardPlayingCard>();
+            foreach (var card in Cards)
+            {
+                reversedCards.Push(card);
+            }
+            Cards = reversedCards;
+        }
 
         /// <summary>
         /// Creates and returns the 52 cards found in a standard playing card
@@ -97,9 +95,5 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
                 yield return new Joker();
             }
         }
-
-        #endregion // End private methods region.
-
-        #endregion // End methods region.
     }
 }

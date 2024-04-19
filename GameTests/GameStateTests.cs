@@ -40,9 +40,16 @@ public class GameStateTests
     {
         var gameState = new GameState(["Alex", "Nikolaj"]);
         var json = gameState.Serialize();
-        var gameStateDeserialized =
-            JsonSerializer.Deserialize<GameState>(json, new JsonSerializerOptions { IncludeFields = true });
-        
-        Assert.Equal(gameState, gameStateDeserialized);
+        var gameStateDeserialized = GameState.Deserialize(json);
+        Assert.Equal(gameState.Serialize(), gameStateDeserialized.Serialize());
+    }
+
+    [Fact]
+    public void Reverse_StandardDeck_Success()
+    {
+        var deck1 = new StandardPlayingCardDeck();
+        var deck2 = new StandardPlayingCardDeck();
+        deck2.Reverse();
+        Assert.NotEqual(deck1.Draw(), deck2.Draw());
     }
 }

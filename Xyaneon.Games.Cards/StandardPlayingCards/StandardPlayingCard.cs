@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Xyaneon.Games.Cards.StandardPlayingCards
 {
@@ -14,8 +15,6 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
     /// <seealso cref="StandardPlayingCardDeck"/>
     public class StandardPlayingCard : Card, IEquatable<StandardPlayingCard>
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the
         /// <see cref="StandardPlayingCard"/> class using the provided rank
@@ -27,15 +26,12 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
         /// <param name="suit">
         /// The <see cref="StandardPlayingCards.Suit"/> of the card.
         /// </param>
+        [JsonConstructor]
         public StandardPlayingCard(Rank rank, Suit suit)
         {
             Rank = rank;
             Suit = suit;
         }
-
-        #endregion // End constructors region.
-
-        #region IEquatable<StandardPlayingCard> implementation
 
         /// <summary>
         /// Indicates whether the current <see cref="StandardPlayingCard"/>
@@ -62,10 +58,6 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
             return Rank.Equals(other.Rank) && Suit.Equals(other.Suit);
         }
 
-        #endregion // End IEquatable<StandardPlayingCard> implementation region.
-
-        #region Properties
-
         /// <summary>
         /// Gets the <see cref="StandardPlayingCards.Rank"/> of this card.
         /// </summary>
@@ -75,12 +67,6 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
         /// Gets the <see cref="StandardPlayingCards.Suit"/> of this card.
         /// </summary>
         public Suit Suit { get; }
-
-        #endregion // End properties region.
-
-        #region Methods
-
-        #region Public methods
 
         /// <summary>
         /// Determines whether the specified object is equal to
@@ -110,12 +96,6 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
         {
             return Rank.GetHashCode() ^ Suit.GetHashCode();
         }
-
-        #endregion // End public methods region.
-
-        #endregion // End methods region.
-
-        #region Operators
 
         /// <summary>
         /// Determines whether two <see cref="StandardPlayingCard"/>
@@ -188,7 +168,5 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
 
             return !card1.Equals(card2);
         }
-
-        #endregion // End operators region.
     }
 }

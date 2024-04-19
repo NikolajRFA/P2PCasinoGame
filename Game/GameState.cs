@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Xyaneon.Games.Cards;
 using Xyaneon.Games.Cards.StandardPlayingCards;
 
 namespace Game;
@@ -9,7 +10,7 @@ public class GameState
     public List<Player> Players { get; set; } = [];
     public Table Table { get; set; } = new();
     public int CurrentPlayer { get; set; }
-    public StandardPlayingCardDeck Deck { get; set; } = new();
+    public StandardPlayingCardDeck Deck { get; set; } = new StandardPlayingCardDeck();
 
     // Deserialization constructor
     [JsonConstructor]
@@ -86,5 +87,13 @@ public class GameState
     public string Serialize()
     {
         return JsonSerializer.Serialize(this);
+    }
+
+    public static GameState Deserialize(string json)
+    {
+        var gameStateDeserialized =
+            JsonSerializer.Deserialize<GameState>(json);
+        gameStateDeserialized!.Deck.Reverse();
+        return gameStateDeserialized;
     }
 }
