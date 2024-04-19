@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Xyaneon.Games.Cards.StandardPlayingCards;
 
 namespace Game;
@@ -10,9 +11,14 @@ public class GameState
     public int CurrentPlayer { get; set; }
     public StandardPlayingCardDeck Deck = new();
 
-    public GameState()
+    // Deserialization constructor
+    [JsonConstructor]
+    public GameState(List<Player> players, Table table, int currentPlayer, StandardPlayingCardDeck deck)
     {
-        // Deserialization constructor
+        Players = players;
+        Table = table;
+        CurrentPlayer = currentPlayer;
+        Deck = deck;
     }
     
     public GameState(List<string> players)
