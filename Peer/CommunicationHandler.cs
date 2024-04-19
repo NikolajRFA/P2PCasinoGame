@@ -15,9 +15,9 @@ public class CommunicationHandler : ICommunicationHandler
         return data.Split(ProtocolSplit).First();
     }
 
-    public static List<string> GetParameters(string data)
+    public static List<int> GetParameters(string data)
     {
-        return data.Split(ProtocolSplit).Last().Split(";").ToList();
+        return data.Split(ProtocolSplit).Last().Split(";").ToList().Select(int.Parse).ToList();
     }
 
     public static List<string> GetIps(string parameters)
@@ -25,7 +25,7 @@ public class CommunicationHandler : ICommunicationHandler
         return parameters.Split(";").ToList();
     }
 
-    public static (string, List<string>) GetPayload(string data)
+    public static (string, List<int>) GetPayload(string data)
     {
         return (GetMethod(data), GetParameters(data));
     }
