@@ -50,6 +50,7 @@ public class PlayerTests
         player.Hand.Add(new StandardPlayingCard(Rank.Two, Suit.Clubs));
         player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Clubs));
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
         Assert.True(player.Build(table, 0, 0, 5));
     }
 

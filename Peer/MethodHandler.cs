@@ -24,9 +24,16 @@ public class MethodHandler
                     Console.WriteLine($"PlaceCard method ran with input {inputs[0]}");
                     break;
                 case MethodType.Build:
-                    Program.GameState.Players[Program.GameState.CurrentPlayer]
-                        .Build(Program.GameState.Table, parsedInputs[0], parsedInputs[1], parsedInputs[2]);
-                    Console.WriteLine($"Build method ran with input {inputs[0]}, {inputs[1]}, {inputs[2]}");
+                    if (Program.GameState.Players[Program.GameState.CurrentPlayer]
+                        .Build(Program.GameState.Table, parsedInputs[0], parsedInputs[1], parsedInputs[2]))
+                    {
+                        Console.WriteLine("The method returned true");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The method returned false");
+                    }
+
                     break;
                 // Add cases for other methods as needed
                 default:
@@ -39,5 +46,4 @@ public class MethodHandler
             Console.WriteLine("Invalid method string.");
         }
     }
-
 }
