@@ -36,7 +36,7 @@ public class Program
                 if (approval.Equals("ok"))
                 {
                     GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).Reverse().ToList());
-                    Outbound.Broadcast($"GAMESTATE(;;){GameState.Serialize()}");
+                    Outbound.Broadcast($"GAMESTATE{CommunicationHandler.ProtocolSplit}{GameState.Serialize()}");
                     Console.WriteLine("GameState has been setup");
                     break;
                 }

@@ -23,7 +23,7 @@ public class Inbound
             var senderIp = client.Client.RemoteEndPoint!.ToString()!.Split(":").First();
             if (!Outbound.Senders.ContainsKey(senderIp))
                 Outbound.NewSender(senderIp);
-            var message = "IP:" + string.Join(";", Outbound.Senders.Select(x => x.Key));
+            var message = "IP" + CommunicationHandler.ProtocolSplit + string.Join(";", Outbound.Senders.Select(x => x.Key));
             Outbound.Broadcast(message);
             var clientThread = new Thread(HandleClientComm);
             clientThread.Start(client);

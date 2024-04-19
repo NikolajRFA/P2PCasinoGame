@@ -2,6 +2,7 @@
 
 public class CommunicationHandler : ICommunicationHandler
 {
+    public const string ProtocolSplit = "(;;)";
     public static void Ips(List<string> ips)
     {
         foreach (var ip in ips)
@@ -11,12 +12,12 @@ public class CommunicationHandler : ICommunicationHandler
 
     public static string GetMethod(string data)
     {
-        return data.Split("(;;)").First();
+        return data.Split(ProtocolSplit).First();
     }
 
     public static string GetParameters(string data)
     {
-        return data.Split("(;;)").Last();
+        return data.Split(ProtocolSplit).Last();
     }
 
     public static List<string> GetListFromParameters(string parameters)
