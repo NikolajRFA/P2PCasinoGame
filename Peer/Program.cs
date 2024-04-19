@@ -38,6 +38,7 @@ public class Program
                 {
                     GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).Reverse().ToList());
                     Outbound.Broadcast($"GAMESTATE{CommunicationHandler.ProtocolSplit}{GameState.Serialize()}");
+                    Console.WriteLine(GameState.Serialize());
                     Console.WriteLine("GameState has been setup");
                     break;
                 }

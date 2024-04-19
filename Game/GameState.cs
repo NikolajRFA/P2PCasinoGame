@@ -9,7 +9,7 @@ public class GameState
     public List<Player> Players { get; set; } = [];
     public Table Table { get; set; } = new();
     public int CurrentPlayer { get; set; }
-    public StandardPlayingCardDeck Deck = new();
+    public StandardPlayingCardDeck Deck { get; set; } = new();
 
     // Deserialization constructor
     [JsonConstructor]
