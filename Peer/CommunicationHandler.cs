@@ -11,12 +11,12 @@ public class CommunicationHandler : ICommunicationHandler
 
     public static string GetMethod(string data)
     {
-        return data.Split(":").First();
+        return data.Split("(;;)").First();
     }
 
     public static string GetParameters(string data)
     {
-        return data.Split(":").Last();
+        return data.Split("(;;)").Last();
     }
 
     public static List<string> GetListFromParameters(string parameters)

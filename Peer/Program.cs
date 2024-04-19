@@ -36,7 +36,7 @@ public class Program
                 if (approval.Equals("ok"))
                 {
                     GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).Reverse().ToList());
-                    Outbound.Broadcast($"GAMESTATE:{GameState.Serialize()}");
+                    Outbound.Broadcast($"GAMESTATE(;;){GameState.Serialize()}");
                     Console.WriteLine("GameState has been setup");
                     break;
                 }
@@ -63,6 +63,7 @@ public class Program
         else
         {
             Console.WriteLine("Wait for your turn...");
+            Thread.Sleep(1000);
         }
         
         while (true)
