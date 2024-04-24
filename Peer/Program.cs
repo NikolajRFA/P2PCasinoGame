@@ -11,7 +11,7 @@ public class Program
 {
     public const int Port = 8000;
     //public static int GameState { get; set; }
-    public static string MyIp = "172.29.0.10";
+    public static string MyIp = "172.29.0.13";
     public static GameState GameState { get; set; }
     public static void Main(string[] args)
     {

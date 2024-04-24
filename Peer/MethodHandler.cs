@@ -6,7 +6,6 @@ public class MethodHandler
     {
         PlaceCard,
         Build,
-        BuildTable,
         Take,
         ClearTable
     }
@@ -16,7 +15,17 @@ public class MethodHandler
         var sanMethod = methodString.TrimStart('_');
         if (Enum.TryParse(sanMethod, true, out MethodType method))
         {
-            var input = inputs.Select(int.Parse).ToList();
+            List<int> input = [];
+            List<int> tableIdxs = [];
+            if (inputs.First().Contains('['))
+            {
+                var unsanitizedInput = inputs.First();
+                tableIdxs = unsanitizedInput.Substring(1, unsanitizedInput.Length - 2).Split(",").Select(int.Parse).ToList();
+            }
+            else
+            {
+                input = inputs.Select(int.Parse).ToList();
+            }
             var table = Program.GameState.Table;
             var currentPlayer = Program.GameState.CurrentPlayer;
             var players = Program.GameState.Players;
@@ -25,11 +34,9 @@ public class MethodHandler
                 case MethodType.PlaceCard:
                     return input.Count == 1 && players[currentPlayer].PlaceCard(table, input[0]);
                 case MethodType.Build:
-                    return input.Count == 3 && players[currentPlayer].Build(table, input[0], input[1], input[2]);
-                case MethodType.BuildTable:
-                    return input.Count == 3 && players[currentPlayer].BuildTable(table, input[0], input[1], input[2]);
+                    return input.Count == 3 && players[currentPlayer].Build(table, tableIdxs, input[0], input[1]);
                 case MethodType.Take:
-                    return input.Count == 2 && players[currentPlayer].Take(table, input[0], input[1]);
+                    return input.Count == 2 && players[currentPlayer].Take(table, tableIdxs, input[0]);
                 case MethodType.ClearTable:
                     return input.Count == 1 && players[currentPlayer].ClearTable(table, input[0]);
                 default:
