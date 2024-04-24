@@ -11,39 +11,33 @@ public class MethodHandler
         ClearTable
     }
 
-    public static void CallMethod(string methodString, List<string> inputs)
+    public static bool CallMethod(string methodString, List<string> inputs)
     {
-        if (Enum.TryParse(methodString, out MethodHandler.MethodType method))
+        if (Enum.TryParse(methodString, true, out MethodHandler.MethodType method))
         {
-            List<int> parsedInputs = inputs.Select(int.Parse).ToList();
+            var input = inputs.Select(int.Parse).ToList();
+            var table = Program.GameState.Table;
+            var currentPlayer = Program.GameState.CurrentPlayer;
+            var players = Program.GameState.Players;
             switch (method)
             {
                 case MethodType.PlaceCard:
-                    Program.GameState.Players[Program.GameState.CurrentPlayer]
-                        .PlaceCard(Program.GameState.Table, parsedInputs[0]);
-                    Console.WriteLine($"PlaceCard method ran with input {inputs[0]}");
-                    break;
+                    return input.Count == 1 && players[currentPlayer].PlaceCard(table, input[0]);
                 case MethodType.Build:
-                    if (Program.GameState.Players[Program.GameState.CurrentPlayer]
-                        .Build(Program.GameState.Table, parsedInputs[0], parsedInputs[1], parsedInputs[2]))
-                    {
-                        Console.WriteLine("The method returned true");
-                    }
-                    else
-                    {
-                        Console.WriteLine("The method returned false");
-                    }
-
-                    break;
-                // Add cases for other methods as needed
+                    return input.Count == 3 && players[currentPlayer].Build(table, input[0], input[1], input[2]);
+                case MethodType.BuildTable:
+                    return input.Count == 3 && players[currentPlayer].BuildTable(table, input[0], input[1], input[2]);
+                case MethodType.Take:
+                    return input.Count == 2 && players[currentPlayer].Take(table, input[0], input[1]);
+                case MethodType.ClearTable:
+                    return input.Count == 1 && players[currentPlayer].ClearTable(table, input[0]);
                 default:
                     Console.WriteLine("Method not recognized.");
-                    break;
+                    return false;
             }
         }
-        else
-        {
-            Console.WriteLine("Invalid method string.");
-        }
+
+        Console.WriteLine("Invalid method string.");
+        return false;
     }
 }
