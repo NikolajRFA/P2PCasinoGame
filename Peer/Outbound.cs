@@ -17,6 +17,7 @@ public class Outbound
         {
             MethodHandler.CallMethod(method, parameters);
             Program.GameState.AdvanceTurn();
+            Console.WriteLine(Program.GameState.DisplayGame(Program.MyIp));
         }
 
         //if (message.StartsWith("ADD")) Program.GameState += int.Parse(message.Split(":").Last());
