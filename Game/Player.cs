@@ -49,6 +49,7 @@ public class Player
             foreach (var tableCard in table.Cards[index].Key.Cards)
             {
                 PointPile.Add(tableCard);
+                PointPile.Add(Hand[handIndex]);
             }
 
             if (table.Cards.Count == 1) ClearCount++;

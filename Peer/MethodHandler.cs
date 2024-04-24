@@ -14,7 +14,7 @@ public class MethodHandler
     public static bool CallMethod(string methodString, IEnumerable<string> inputs)
     {
         var sanMethod = methodString.TrimStart('_');
-        if (Enum.TryParse(sanMethod, true, out MethodHandler.MethodType method))
+        if (Enum.TryParse(sanMethod, true, out MethodType method))
         {
             var input = inputs.Select(int.Parse).ToList();
             var table = Program.GameState.Table;

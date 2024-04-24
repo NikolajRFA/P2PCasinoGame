@@ -61,6 +61,7 @@ public class Program
         {
             var message = Console.ReadLine() ?? "";
             Outbound.Broadcast(message);
+            Console.WriteLine(GameState.Serialize());
         }
         else
         {
