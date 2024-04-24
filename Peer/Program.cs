@@ -13,6 +13,7 @@ public class Program
     //public static int GameState { get; set; }
     public static string MyIp = "172.29.0.14";
     public static GameState GameState { get; set; }
+    public static Display display = new Display(GameState, MyIp);
 
     public static void Main(string[] args)
     {
@@ -40,6 +41,7 @@ public class Program
                     Outbound.Broadcast($"GAMESTATE{CommunicationHandler.ProtocolSplit}{GameState.Serialize()}");
                     Console.WriteLine(GameState.Serialize());
                     Console.WriteLine("GameState has been setup");
+                    Console.WriteLine(display);
                     break;
                 }
             }
@@ -61,7 +63,6 @@ public class Program
         {
             var message = Console.ReadLine() ?? "";
             Outbound.Broadcast(message);
-            Console.WriteLine(GameState.Serialize());
         }
         else
         {

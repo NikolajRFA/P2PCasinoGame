@@ -73,6 +73,7 @@ public class Inbound
                     break;
                 case not null when method.StartsWith("_"):
                     MethodHandler.CallMethod(method, data);
+                    Console.WriteLine(Program.display);
                     break;
                 default:
                     Console.WriteLine("Unrecognized input pattern");
