@@ -62,6 +62,7 @@ public class PlayerTests
         player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Clubs));
         player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Diamonds));
+        player.Hand.Add(new StandardPlayingCard(Rank.Four, Suit.Hearts));
         Assert.True(player.Build(table, 0, 0, 4));
     }
 
@@ -73,6 +74,7 @@ public class PlayerTests
         player.Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Hearts));
         player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Hearts));
+        player.Hand.Add(new StandardPlayingCard(Rank.Four, Suit.Hearts));
         Assert.True(player.Build(table, 0, 0, 4));
     }
 
@@ -84,6 +86,7 @@ public class PlayerTests
         player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Clubs));
         player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Hearts));
+        player.Hand.Add(new StandardPlayingCard(Rank.Two, Suit.Hearts));
         Assert.True(player.Build(table, 0, 0, 2));
     }
 

@@ -11,7 +11,7 @@ public class MethodHandler
         ClearTable
     }
 
-    public static bool CallMethod(string methodString, List<string> inputs)
+    public static bool CallMethod(string methodString, IEnumerable<string> inputs)
     {
         if (Enum.TryParse(methodString, true, out MethodHandler.MethodType method))
         {

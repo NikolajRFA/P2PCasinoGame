@@ -22,7 +22,7 @@ public class Player
 
     public bool Build(Table table, int index, int handIndex, int value)
     {
-        var filteredList = Hand.Where((value, index) => index != handIndex);
+        var filteredList = Hand.Where((Card, index) => index != handIndex);
         if (!filteredList.Any(card => GameState.CardToValue(card).Item1.Contains(value) )) return false;
         var kvp = table.Cards[index];
         var cardValues = GameState.CardToValue(Hand[handIndex]).Item1;
