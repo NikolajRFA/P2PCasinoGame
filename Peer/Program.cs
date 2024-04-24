@@ -11,10 +11,8 @@ public class Program
 {
     public const int Port = 8000;
     //public static int GameState { get; set; }
-    public static string MyIp = "172.29.0.14";
+    public static string MyIp = "172.29.0.13";
     public static GameState GameState { get; set; }
-    public static Display display = new Display(GameState, MyIp);
-
     public static void Main(string[] args)
     {
         // Get all IP addresses associated with the host
@@ -41,7 +39,7 @@ public class Program
                     Outbound.Broadcast($"GAMESTATE{CommunicationHandler.ProtocolSplit}{GameState.Serialize()}");
                     Console.WriteLine(GameState.Serialize());
                     Console.WriteLine("GameState has been setup");
-                    Console.WriteLine(display);
+                    Console.WriteLine(GameState.DisplayGame(MyIp));
                     break;
                 }
             }

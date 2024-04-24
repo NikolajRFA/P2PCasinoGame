@@ -83,6 +83,24 @@ public class GameState
         if (CurrentPlayer < Players.Count - 1) CurrentPlayer++;
         else CurrentPlayer = 0;
     }
+
+    public string DisplayHand(string playerName)
+    {
+        return
+            $"Hand: {string.Join(" | ", Players.Single(player => player.Name == playerName).Hand.Select(card => card.ToString()))}";
+    }
+
+    public string DisplayTable()
+    {
+        return
+            $"Table: {string.Join(" | ", Table.Cards.Select(pile => string.Join(", ", pile.Key.Cards.Select(card => card.ToString())) + (pile.Key.Cards.Count > 1 ? $" ({pile.Value.Single()})" : "")))}";
+    }
+
+    public string DisplayGame(string player)
+    {
+        return $"{DisplayHand(player)}\n{DisplayTable()}";
+
+    }
     
     public string Serialize()
     {
