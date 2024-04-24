@@ -98,7 +98,7 @@ public class GameState
 
     public string DisplayGame(string player)
     {
-        return $"{DisplayHand(player)}\n-----------------------------------------------------\n{DisplayTable()}";
+        return $"\n{DisplayHand(player)}\n-----------------------------------------------------\n{DisplayTable()}\n";
 
     }
     
