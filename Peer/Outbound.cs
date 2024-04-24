@@ -13,8 +13,8 @@ public class Outbound
     public static void Broadcast(string message)
     {
         var (method, parameters) = CommunicationHandler.GetPayload(message);
-        MethodHandler.CallMethod(method, parameters);
-        
+        if (method.StartsWith('_')) MethodHandler.CallMethod(method, parameters);
+
         //if (message.StartsWith("ADD")) Program.GameState += int.Parse(message.Split(":").Last());
         foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
     }

@@ -72,7 +72,8 @@ public class Program
         {
             var message = Console.ReadLine() ?? "";
             if (message == "QUIT") break;
-            Outbound.Broadcast(message);
+            Outbound.Broadcast($"{message}");
+            Console.WriteLine(GameState.Serialize());
         }
 
         foreach (var sender in Outbound.Senders) sender.Value.Close();
