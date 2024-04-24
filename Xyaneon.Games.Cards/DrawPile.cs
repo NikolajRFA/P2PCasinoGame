@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Xyaneon.Games.Cards
 {
@@ -19,8 +20,6 @@ namespace Xyaneon.Games.Cards
     /// <seealso cref="ShuffleFunction{TCard}"/>
     public class DrawPile<TCard> : IDrawPile<TCard> where TCard : Card
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawPile{TCard}"/> class
         /// using the provided visibility.
@@ -32,8 +31,13 @@ namespace Xyaneon.Games.Cards
         /// </param>
         public DrawPile(bool isFaceUp = false)
         {
-            _cards = new Stack<TCard>();
+            Cards = new Stack<TCard>();
             IsFaceUp = isFaceUp;
+        }
+
+        [JsonConstructor]
+        public DrawPile()
+        {
         }
 
         /// <summary>
@@ -58,29 +62,18 @@ namespace Xyaneon.Games.Cards
                 throw new ArgumentNullException(nameof(cards), "The collection of cards to create the draw pile from cannot be null.");
             }
 
-            _cards = new Stack<TCard>(cards);
+            Cards = new Stack<TCard>(cards);
             IsFaceUp = isFaceUp;
         }
-
-        public DrawPile()
-        {
-            
-        }
-
-        #endregion // End constructors region.
-
-        #region IDrawPile<TCard> implementation
-
-        #region Properties
 
         /// <summary>
         /// Gets a read-only view of the cards currently in this
         /// <see cref="DrawPile{TCard}"/>.
         /// </summary>
-        public IReadOnlyList<TCard> Cards
+        /*public IReadOnlyList<TCard> Cards
         {
             get => _cards.ToList().AsReadOnly();
-        }
+        }*/
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="DrawPile{TCard}"/>
@@ -88,7 +81,7 @@ namespace Xyaneon.Games.Cards
         /// </summary>
         public bool IsEmpty
         {
-            get => _cards.Count == 0;
+            get => Cards.Count == 0;
         }
 
         /// <summary>
@@ -97,10 +90,6 @@ namespace Xyaneon.Games.Cards
         /// (<see langword="false"/>).
         /// </summary>
         public bool IsFaceUp { get; set; }
-
-        #endregion // End properties region.
-
-        #region Methods
 
         /// <summary>
         /// Draws a single <see cref="Card"/> from the top of this
@@ -120,7 +109,7 @@ namespace Xyaneon.Games.Cards
                 throw new InvalidOperationException("There are no cards left to draw.");
             }
 
-            return _cards.Pop();
+            return Cards.Pop();
         }
 
         /// <summary>
@@ -139,7 +128,7 @@ namespace Xyaneon.Games.Cards
         /// </exception>
         public IEnumerable<TCard> Draw(int count)
         {
-            if (count > _cards.Count)
+            if (count > Cards.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, "Too few cards to draw in this draw pile.");
             }
@@ -165,8 +154,8 @@ namespace Xyaneon.Games.Cards
         /// </remarks>
         public IEnumerable<TCard> DrawAll()
         {
-            var drawnCards = new Queue<TCard>(_cards.Count);
-            while (_cards.Count > 0)
+            var drawnCards = new Queue<TCard>(Cards.Count);
+            while (Cards.Count > 0)
             {
                 drawnCards.Enqueue(Draw());
             }
@@ -191,7 +180,7 @@ namespace Xyaneon.Games.Cards
         public IEnumerable<TCard> DrawAtMost(int count)
         {
             var drawnCards = new Queue<TCard>(count);
-            for (int i = 0; i < count && _cards.Count > 0; i++)
+            for (int i = 0; i < count && Cards.Count > 0; i++)
             {
                 drawnCards.Enqueue(Draw());
             }
@@ -232,14 +221,14 @@ namespace Xyaneon.Games.Cards
                 throw new ArgumentOutOfRangeException(nameof(index), index, "The position to insert the card into the draw pile at cannot be less than zero.");
             }
 
-            if (index > _cards.Count)
+            if (index > this.Cards.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, "The position to insert the card into the draw pile at cannot be greater than the number of cards in the draw pile.");
             }
 
-            List<TCard> cards = _cards.ToList();
+            List<TCard> cards = this.Cards.ToList();
             cards.Insert(index, card);
-            _cards = new Stack<TCard>(cards);
+            this.Cards = new Stack<TCard>(cards);
         }
 
         /// <summary>
@@ -258,7 +247,7 @@ namespace Xyaneon.Games.Cards
             {
                 throw new ArgumentNullException(nameof(card), "The card to place at the bottom of the draw pile cannot be null.");
             }
-            _cards = new Stack<TCard>(new TCard[] { card }.Concat(_cards.Reverse()));
+            Cards = new Stack<TCard>(new TCard[] { card }.Concat(Cards.Reverse()));
         }
 
         /// <summary>
@@ -278,7 +267,7 @@ namespace Xyaneon.Games.Cards
                 throw new ArgumentNullException(nameof(card), "The card to place on top of the draw pile cannot be null.");
             }
 
-            _cards.Push(card);
+            Cards.Push(card);
         }
 
         /// <summary>
@@ -445,19 +434,7 @@ namespace Xyaneon.Games.Cards
             ShuffleInBase(cards, shuffleAlgorithm);
         }
 
-        #endregion // End methods region.
-
-        #endregion // End IDrawPile<TCard> implementation region.
-
-        #region Fields
-
-        private Stack<TCard> _cards;
-
-        #endregion // End fields region.
-
-        #region Methods
-
-        #region Private methods
+        public Stack<TCard> Cards { get; set; }
 
         private static IList<TCard> DefaultShuffleAlgorithm(IEnumerable<TCard> cards)
         {
@@ -467,8 +444,8 @@ namespace Xyaneon.Games.Cards
 
         private void ShuffleBase(ShuffleFunction<TCard> shuffleAlgorithm)
         {
-            IList<TCard> shuffledCards = shuffleAlgorithm(_cards);
-            _cards = new Stack<TCard>(shuffledCards);
+            IList<TCard> shuffledCards = shuffleAlgorithm(Cards);
+            Cards = new Stack<TCard>(shuffledCards);
         }
 
         private void ShuffleInBase(IDrawPile<TCard> other, ShuffleFunction<TCard> shuffleAlgorithm)
@@ -478,13 +455,9 @@ namespace Xyaneon.Games.Cards
 
         private void ShuffleInBase(IEnumerable<TCard> cards, ShuffleFunction<TCard> shuffleAlgorithm)
         {
-            IEnumerable<TCard> cardsToShuffle = _cards.Concat(cards);
+            IEnumerable<TCard> cardsToShuffle = this.Cards.Concat(cards);
             IList<TCard> shuffledCards = shuffleAlgorithm(cardsToShuffle);
-            _cards = new Stack<TCard>(shuffledCards);
+            this.Cards = new Stack<TCard>(shuffledCards);
         }
-
-        #endregion // End private methods region.
-
-        #endregion // End methods region.
     }
 }
