@@ -71,7 +71,7 @@ public class Inbound
                     };
                     Program.GameState = JsonSerializer.Deserialize<GameState>(data[0], options)!;
                     break;
-                case not null when method.StartsWith("_"):
+                case not null when method.StartsWith('_'):
                     MethodHandler.CallMethod(method, data);
                     Console.WriteLine(Program.GameState.DisplayGame(Program.MyIp));
                     break;

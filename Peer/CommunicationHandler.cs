@@ -2,7 +2,7 @@
 
 public class CommunicationHandler : ICommunicationHandler
 {
-    public const string ProtocolSplit = "(;;)";
+    public const string ProtocolSplit = "_:_";
     public static void Ips(List<string> ips)
     {
         foreach (var ip in ips)
