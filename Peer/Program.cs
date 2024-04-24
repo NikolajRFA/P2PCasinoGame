@@ -57,17 +57,22 @@ public class Program
             Console.WriteLine("Waiting for game to start...");
         }
 
-        if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
+        while (true)
         {
-            var message = Console.ReadLine() ?? "";
-            Outbound.Broadcast(message);
+            if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
+            {
+                Console.WriteLine("Make your move!");
+                var message = Console.ReadLine() ?? "";
+                if (message == "QUIT") break;
+                Outbound.Broadcast(message);
+            }
+            else
+            {
+                Console.WriteLine("Wait for your turn...");
+                Thread.Sleep(1000);
+            }
         }
-        else
-        {
-            Console.WriteLine("Wait for your turn...");
-            Thread.Sleep(1000);
-        }
-        
+        /*
         while (true)
         {
             var message = Console.ReadLine() ?? "";
@@ -79,5 +84,6 @@ public class Program
         foreach (var sender in Outbound.Senders) sender.Value.Close();
 
         Environment.Exit(1);
+        */
     }
 }
