@@ -168,5 +168,10 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
 
             return !card1.Equals(card2);
         }
+
+        public override string ToString()
+        {
+            return $"{Rank} of {Suit}";
+        }
     }
 }

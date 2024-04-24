@@ -11,7 +11,7 @@ public class Program
 {
     public const int Port = 8000;
     //public static int GameState { get; set; }
-    public static string MyIp = "172.29.0.13";
+    public static string MyIp = "172.29.0.14";
     public static GameState GameState { get; set; }
 
     public static void Main(string[] args)
@@ -74,7 +74,7 @@ public class Program
             var message = Console.ReadLine() ?? "";
             if (message == "QUIT") break;
             Outbound.Broadcast($"{message}");
-            Console.WriteLine(GameState.Serialize());
+            
         }
 
         foreach (var sender in Outbound.Senders) sender.Value.Close();
