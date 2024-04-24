@@ -57,24 +57,28 @@ public class Inbound
             Console.WriteLine($"{remoteIp} Received: {dataReceived}");
             // Handle commands
             var (method, data) = CommunicationHandler.GetPayload(dataReceived);
-            if (method.StartsWith("IP"))
+
+            switch (method)
             {
-                CommunicationHandler.Ips(CommunicationHandler.GetIps(string.Join(";", data)));
-            }
-            else
-            {
-                MethodHandler.CallMethod(method, data);
+                case not null when method.StartsWith("IP"):
+                    CommunicationHandler.Ips(CommunicationHandler.GetIps(string.Join(";", data)));
+                    break;
+                case not null when method.StartsWith("GAMESTATE"):
+                    Console.WriteLine(data);
+                    var options = new JsonSerializerOptions
+                    {
+                        IncludeFields = true,
+                    };
+                    Program.GameState = JsonSerializer.Deserialize<GameState>(data[0], options)!;
+                    break;
+                case not null when method.StartsWith("_"):
+                    MethodHandler.CallMethod(method, data);
+                    break;
+                default:
+                    Console.WriteLine("Unrecognized input pattern");
+                    break;
             }
 
-            if (method.StartsWith("GAMESTATE"))
-            {
-                Console.WriteLine(data);
-                var options = new JsonSerializerOptions
-                {
-                    IncludeFields = true,
-                };
-                Program.GameState = JsonSerializer.Deserialize<GameState>(data[0], options)!;
-            }
 
             //Console.WriteLine($"Game state is {Program.GameState.Serialize()}");
         }

@@ -13,6 +13,7 @@ public class MethodHandler
 
     public static bool CallMethod(string methodString, IEnumerable<string> inputs)
     {
+        var sanMethod = methodString.TrimStart('_');
         if (Enum.TryParse(methodString, true, out MethodHandler.MethodType method))
         {
             var input = inputs.Select(int.Parse).ToList();
