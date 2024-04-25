@@ -38,7 +38,7 @@ public class GameStateTests
         player.PlaceCard(table, 0);
         // taking the card on the table with card in hand
         player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
-        player.Take(table, 0, 0);
+        player.Take(table, [0], 0);
         // Hacking an advancement of the turn to make the current player the last to take
         gameState.AdvanceTurn("_take");
         // Adding a full set of cards to player's hand

@@ -43,33 +43,32 @@ public class Player
         kvps.First().Value.Clear();
         kvps.First().Value.Add(value);
 
-        /*kvp.Key.PlaceOnTop(Hand[handIndex]);
-        kvp.Value.Clear();
-        kvp.Value.Add(value);*/
         return true;
     }
 
-    public bool BuildTable(Table table, int index1, int index2, int value)
+    public bool Take(Table table, List<int> indexes, int handIndex)
     {
-        var cards1 = table.Cards[index1].Value;
-        var cards2 = table.Cards[index2].Value;
-        //return CompareValues(cards1, cards2, value);
-        return false;
-    }
-
-    public bool Take(Table table, int index, int handIndex)
-    {
-        if (table.Cards[index].Value.Any(x => GameState.CardToValue(Hand[handIndex]).Item1.Any(y => x == y)))
+        var tableCards = table.Cards.Where((_, index) => indexes.Contains(index));
+        // Get possible sums when combining card values.
+        var possibleSums = GetPossibleSums(tableCards.Select(kvp => kvp.Value).ToList());
+        
+        if (possibleSums.Any(sum => GameState.CardToValue(Hand[handIndex]).Item1.Any(val => val == sum)))
         {
-            foreach (var tableCard in table.Cards[index].Key.Cards)
+            foreach (var pile in tableCards.Select(kvp => kvp.Key))
             {
-                PointPile.Add(tableCard);
-                PointPile.Add(Hand[handIndex]);
+                for (var i = 0; i < pile.Cards.Count(); i++)
+                {
+                    PointPile.Add(pile.Cards.Pop());
+                }
             }
-
+            PointPile.Add(Hand[handIndex]);
+            
             if (table.Cards.Count == 1) ClearCount++;
+            
+            indexes.Sort();
+            indexes.Reverse();
+            indexes.ForEach(idx => table.Cards.RemoveAt(idx));
             Hand.RemoveAt(handIndex);
-            table.Cards.RemoveAt(index);
             return true;
         }
 
@@ -91,15 +90,27 @@ public class Player
 
     private bool CompareValues(int value, List<List<int>> valuesCollections, int index = 0, int currentSum = 0)
     {
-        // Base case: If we've checked all collections and the current sum equals the target value, return true.
-        if (index == valuesCollections.Count)
+        return GetPossibleSums(valuesCollections).Contains(value);
+    }
+    
+    public static List<int> GetPossibleSums(List<List<int>> listOfLists)
+    {
+        List<int> possibleSums = new List<int>();
+        GetSumsRecursively(listOfLists, 0, 0, possibleSums);
+        return possibleSums;
+    }
+
+    private static void GetSumsRecursively(List<List<int>> listOfLists, int index, int currentSum, List<int> possibleSums)
+    {
+        if (index == listOfLists.Count)
         {
-            return currentSum == value;
+            possibleSums.Add(currentSum);
+            return;
         }
 
-        // Recursive case: Try each value in the current collection.
-        return valuesCollections.ElementAt(index)
-            .Any(item => 
-                CompareValues(value, valuesCollections, index + 1, currentSum + item));
+        foreach (var value in listOfLists[index])
+        {
+            GetSumsRecursively(listOfLists, index + 1, currentSum + value, possibleSums);
+        }
     }
 }

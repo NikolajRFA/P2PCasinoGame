@@ -15,7 +15,7 @@ public class PlayerTests
         player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
 
-        Assert.True(player.Take(table, 0, 0));
+        Assert.True(player.Take(table, [0], 0));
     }
 
     [Fact]
@@ -27,7 +27,21 @@ public class PlayerTests
         player.PlaceCard(table, 0);
         player.Hand.Add(new StandardPlayingCard(Rank.Six, Suit.Diamonds));
 
-        Assert.False(player.Take(table, 0, 0));
+        Assert.False(player.Take(table, [0], 0));
+    }
+
+    [Fact]
+    public void Take_Table10And4WithHandAce_True()
+    {
+        var table = new Table();
+        var player = new Player();
+        // Hack some cards onto the table
+        player.Hand.AddRange([new StandardPlayingCard(Rank.Ten, Suit.Clubs), new StandardPlayingCard(Rank.Four, Suit.Diamonds)]);
+        player.PlaceCard(table, 0);
+        player.PlaceCard(table, 0);
+        // Setup player for take
+        player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Hearts));
+        Assert.True(player.Take(table, [0, 1], 0));
     }
 
     [Fact]
@@ -40,31 +54,5 @@ public class PlayerTests
         player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Spades));
 
         Assert.True(player.ClearTable(table, 0));
-    }
-
-    [Fact]
-    public void BuildTable_4Plus4Equals8_True()
-    {
-        var table = new Table();
-        var player = new Player();
-        player.Hand.Add(new StandardPlayingCard(Rank.Four, Suit.Hearts));
-        player.PlaceCard(table, 0);
-        player.Hand.Add(new StandardPlayingCard(Rank.Four, Suit.Diamonds));
-        player.PlaceCard(table, 0);
-        Assert.True(player.BuildTable(table, 0, 1, 8));
-    }
-
-    [Fact]
-    public void BuildTable_4Plus4As8Plus2Equals10_True()
-    {
-        var table = new Table();
-        var player = new Player();
-        var pile = new DrawPile<StandardPlayingCard>(isFaceUp: true);
-        pile.PlaceOnTop(new StandardPlayingCard(Rank.Four, Suit.Clubs));
-        pile.PlaceOnTop(new StandardPlayingCard(Rank.Four, Suit.Diamonds));
-        table.Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(pile, [8]));
-        player.Hand.Add(new StandardPlayingCard(Rank.Two, Suit.Clubs));
-        player.PlaceCard(table, 0);
-        Assert.True(player.BuildTable(table, 0, 1, 10));
     }
 }
