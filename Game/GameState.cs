@@ -86,6 +86,10 @@ public class GameState
         if (method.StartsWith("_take")) LastToTake = Players[CurrentPlayer];
         if (CurrentPlayer < Players.Count - 1) CurrentPlayer++;
         else CurrentPlayer = 0;
+        if (Players.Count(x => x.Hand.Count == 0) == Players.Count)
+        {
+            Deal();
+        }
     }
 
     public string DisplayHand(string playerName)
