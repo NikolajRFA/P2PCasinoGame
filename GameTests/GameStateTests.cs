@@ -31,7 +31,18 @@ public class GameStateTests
     public void SumPoints_AllCardsToOnePlayer_11()
     {
         var gameState = new GameState(["Alex"]);
-        gameState.Players[0].PointPile.AddRange(new StandardPlayingCardDeck().Cards);
+        var table = new Table();
+        var player = gameState.Players[0];
+        // setting up table with a fiver
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Spades));
+        player.PlaceCard(table, 0);
+        // taking the card on the table with card in hand
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
+        player.Take(table, 0, 0);
+        // Hacking an advancement of the turn to make the current player the last to take
+        gameState.AdvanceTurn("_take");
+        // Adding a full set of cards to player's hand
+        player.PointPile.AddRange(new StandardPlayingCardDeck().Cards);
         Assert.Equal(11, gameState.SumPoints()[0].Item2);
     }
 

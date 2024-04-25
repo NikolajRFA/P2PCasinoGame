@@ -16,7 +16,7 @@ public class Outbound
         if (method.StartsWith('_'))
         {
             MethodHandler.CallMethod(method, parameters);
-            Program.GameState.AdvanceTurn();
+            Program.GameState.AdvanceTurn(method);
             Console.WriteLine(Program.GameState.DisplayGame(Program.MyIp));
         }
 

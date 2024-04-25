@@ -11,6 +11,7 @@ public class GameState
     public Table Table { get; set; } = new();
     public int CurrentPlayer { get; set; }
     public StandardPlayingCardDeck Deck { get; set; } = new StandardPlayingCardDeck();
+    public Player LastToTake { get; set; }
 
     // Deserialization constructor
     [JsonConstructor]
@@ -71,6 +72,7 @@ public class GameState
         {
             player.ClearCount -= minClears;
             var points = player.PointPile.Sum(card => CardToValue(card).Item2) + player.ClearCount;
+            if (LastToTake == player) points += 1;
             if (playerWithMaxCards == player) points += 1;
             if (playerWithMaxSpades == player) points += 2;
             output.Add((player, points));
@@ -78,8 +80,10 @@ public class GameState
         return output;
     }
 
-    public void AdvanceTurn()
+    public void AdvanceTurn(string method)
     {
+        var lowered = method.ToLower();
+        if (method.StartsWith("_take")) LastToTake = Players[CurrentPlayer];
         if (CurrentPlayer < Players.Count - 1) CurrentPlayer++;
         else CurrentPlayer = 0;
     }
