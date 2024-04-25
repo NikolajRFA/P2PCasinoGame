@@ -74,7 +74,7 @@ public class Inbound
                 case not null when method.StartsWith('_'):
                     MethodHandler.CallMethod(method, data);
                     Console.WriteLine(Program.GameState.DisplayGame(Program.MyIp));
-                    Program.GameState.AdvanceTurn();
+                    Program.GameState.AdvanceTurn(method);
                     break;
                 default:
                     Console.WriteLine("Unrecognized input pattern");
