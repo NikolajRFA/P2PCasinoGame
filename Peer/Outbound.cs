@@ -13,15 +13,17 @@ public class Outbound
     public static void Broadcast(string message)
     {
         var (method, parameters) = CommunicationHandler.GetPayload(message);
-        if (method.StartsWith('_'))
+        if (!method.StartsWith('_')) return;
+        if (MethodHandler.CallMethod(method, parameters))
         {
-            MethodHandler.CallMethod(method, parameters);
             Program.GameState.AdvanceTurn(method);
             Console.WriteLine(Program.GameState.DisplayGame(Program.MyIp));
+            foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
         }
-
-        //if (message.StartsWith("ADD")) Program.GameState += int.Parse(message.Split(":").Last());
-        foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
+        else
+        {
+            Console.WriteLine("Your move was not accepted - try again!");
+        }
     }
 
     private static void SendMessage(TcpClient client, string message)
