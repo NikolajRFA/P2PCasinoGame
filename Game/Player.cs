@@ -88,12 +88,13 @@ public class Player
         return true;
     }
 
-    private bool CompareValues(int value, List<List<int>> valuesCollections, int index = 0, int currentSum = 0)
+    private bool CompareValues(int value, List<List<int>> valuesCollections)
     {
-        return GetPossibleSums(valuesCollections).Contains(value);
+        var possibleSums = GetPossibleSums(valuesCollections);
+        return possibleSums.Contains(value) || possibleSums.Any(sum => sum % value == 0);
     }
-    
-    public static List<int> GetPossibleSums(List<List<int>> listOfLists)
+
+    private static List<int> GetPossibleSums(List<List<int>> listOfLists)
     {
         List<int> possibleSums = new List<int>();
         GetSumsRecursively(listOfLists, 0, 0, possibleSums);
