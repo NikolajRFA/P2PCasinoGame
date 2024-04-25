@@ -40,6 +40,7 @@ public class Player
             table.Cards.Remove(kvp);
         }
         kvps.First().Key.Cards.Push(Hand[handIndex]);
+        Hand.RemoveAt(handIndex);
         kvps.First().Value.Clear();
         kvps.First().Value.Add(value);
 
