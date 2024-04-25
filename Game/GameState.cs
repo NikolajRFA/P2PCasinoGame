@@ -86,9 +86,17 @@ public class GameState
         if (method.StartsWith("_take")) LastToTake = Players[CurrentPlayer];
         if (CurrentPlayer < Players.Count - 1) CurrentPlayer++;
         else CurrentPlayer = 0;
-        if (Players.Count(x => x.Hand.Count == 0) == Players.Count)
+        if (!Deck.IsEmpty)
         {
-            Deal();
+            if (Players.Count(x => x.Hand.Count == 0) == Players.Count)
+            {
+                Deal();
+            }
+        }
+        else
+        {
+            var results = SumPoints();
+            results.ForEach(result => Console.WriteLine($"{result.Item1.Name} has {result.Item2} points\n"));
         }
     }
 
