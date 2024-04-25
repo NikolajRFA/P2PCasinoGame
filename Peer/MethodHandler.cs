@@ -10,7 +10,7 @@ public class MethodHandler
         ClearTable
     }
 
-    public static bool CallMethod(string methodString, IEnumerable<string> inputs)
+    public static bool CallMethod(string methodString, List<string> inputs)
     {
         var sanMethod = methodString.TrimStart('_');
         if (Enum.TryParse(sanMethod, true, out MethodType method))
@@ -22,8 +22,9 @@ public class MethodHandler
             {
                 var unsanitizedInput = firstInput.Trim('[', ']');
                 tableIdxs = unsanitizedInput.Split(',').Select(int.Parse).ToList();
-                inputs.ToList().RemoveAt(0);
+                inputs.RemoveAt(0);
             }
+
             input = inputs.Select(int.Parse).ToList();
 
             var table = Program.GameState.Table;
