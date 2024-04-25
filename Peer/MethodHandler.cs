@@ -17,15 +17,17 @@ public class MethodHandler
         {
             List<int> input = [];
             List<int> tableIdxs = [];
-            if (inputs.First().Contains('['))
+            var firstInput = inputs.First();
+            if (firstInput.Contains('['))
             {
-                var unsanitizedInput = inputs.First();
-                tableIdxs = unsanitizedInput.Substring(1, unsanitizedInput.Length - 2).Split(",").Select(int.Parse).ToList();
+                var unsanitizedInput = firstInput.Trim('[', ']');
+                tableIdxs = unsanitizedInput.Split(',').Select(int.Parse).ToList();
             }
             else
             {
                 input = inputs.Select(int.Parse).ToList();
             }
+
             var table = Program.GameState.Table;
             var currentPlayer = Program.GameState.CurrentPlayer;
             var players = Program.GameState.Players;
