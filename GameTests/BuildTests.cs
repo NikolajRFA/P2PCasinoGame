@@ -77,4 +77,18 @@ public class BuildTests
         player.Hand.AddRange([new StandardPlayingCard(Rank.Ten, Suit.Spades), new StandardPlayingCard(Rank.Ten, Suit.Diamonds)]);
         Assert.True(player.Build(table, [0, 1], 0, 16));
     }
+
+    [Fact]
+    public void Build_TableAcePlusTable10PlusHand11Is11_True()
+    {
+        var table = new Table();
+        var player = new Player();
+        // Hack together table setup
+        player.Hand.AddRange([new StandardPlayingCard(Rank.Ace, Suit.Diamonds), new StandardPlayingCard(Rank.Ten, Suit.Clubs)]);
+        player.PlaceCard(table, 0);
+        player.PlaceCard(table, 0);
+        // Setup player
+        player.Hand.AddRange([new StandardPlayingCard(Rank.Jack, Suit.Clubs), new StandardPlayingCard(Rank.Jack, Suit.Diamonds)]);
+        Assert.True(player.Build(table, [0,1,2], 0, 11));
+    }
 }
