@@ -14,24 +14,38 @@ public class Player
     {
         var drawPile = new DrawPile<StandardPlayingCard>(isFaceUp: true);
         drawPile.PlaceOnTop(Hand[handIndex]);
-        table.Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(drawPile, GameState.CardToValue(Hand[handIndex]).Item1));
+        table.Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(drawPile,
+            GameState.CardToValue(Hand[handIndex]).Item1));
         Hand.RemoveAt(handIndex);
-        
+
         return true;
     }
 
-    public bool Build(Table table, int index, int handIndex, int value)
+    public bool Build(Table table, List<int> indexes, int handIndex, int value)
     {
-        var filteredList = Hand.Where((Card, index) => index != handIndex);
-        if (!filteredList.Any(card => GameState.CardToValue(card).Item1.Contains(value) )) return false;
-        var kvp = table.Cards[index];
+        var filteredList = Hand.Where((_, index) => index != handIndex);
+        if (!filteredList.Any(card => GameState.CardToValue(card).Item1.Contains(value))) return false;
+        var kvps = table.Cards.Where((_, index) => indexes.Contains(index)).ToList();
         var cardValues = GameState.CardToValue(Hand[handIndex]).Item1;
 
-        if (!CompareValues(kvp.Value, cardValues, value)) return false;
+        if (!CompareValues(value, kvps.Select(kvp => kvp.Value).Append(cardValues).ToList())) return false;
 
-        kvp.Key.PlaceOnTop(Hand[handIndex]);
+        foreach (var kvp in kvps.Where((_, idx) => idx != 0))
+        {
+            foreach (var card in kvp.Key.Cards)
+            {
+                kvps.First().Key.Cards.Push(card);
+            }
+
+            table.Cards.Remove(kvp);
+        }
+
+        kvps.First().Value.Clear();
+        kvps.First().Value.Add(value);
+
+        /*kvp.Key.PlaceOnTop(Hand[handIndex]);
         kvp.Value.Clear();
-        kvp.Value.Add(value);
+        kvp.Value.Add(value);*/
         return true;
     }
 
@@ -39,7 +53,8 @@ public class Player
     {
         var cards1 = table.Cards[index1].Value;
         var cards2 = table.Cards[index2].Value;
-        return CompareValues(cards1, cards2, value);
+        //return CompareValues(cards1, cards2, value);
+        return false;
     }
 
     public bool Take(Table table, int index, int handIndex)
@@ -68,13 +83,23 @@ public class Player
         {
             PointPile.AddRange(card.Key.Cards);
         }
+
         Hand.RemoveAt(handIndex);
         table.Cards.Clear();
         return true;
     }
-    
-    private bool CompareValues(IEnumerable<int> values1, IEnumerable<int> values2, int value)
+
+    private bool CompareValues(int value, List<List<int>> valuesCollections, int index = 0, int currentSum = 0)
     {
-        return values1.Any(cardValue => values2.Any(tableValue => cardValue + tableValue == value));
+        // Base case: If we've checked all collections and the current sum equals the target value, return true.
+        if (index == valuesCollections.Count)
+        {
+            return currentSum == value;
+        }
+
+        // Recursive case: Try each value in the current collection.
+        return valuesCollections.ElementAt(index)
+            .Any(item => 
+                CompareValues(value, valuesCollections, index + 1, currentSum + item));
     }
 }

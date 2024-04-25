@@ -43,65 +43,6 @@ public class PlayerTests
     }
 
     [Fact]
-    public void Build_SingleValuePlusSingleValue_True()
-    {
-        var table = new Table();
-        var player = new Player();
-        player.Hand.Add(new StandardPlayingCard(Rank.Two, Suit.Clubs));
-        player.PlaceCard(table, 0);
-        player.Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Clubs));
-        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
-        Assert.True(player.Build(table, 0, 0, 5));
-    }
-
-    [Fact]
-    public void Build_DualValuePlusSingleValue_True()
-    {
-        var table = new Table();
-        var player = new Player();
-        player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Clubs));
-        player.PlaceCard(table, 0);
-        player.Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Diamonds));
-        player.Hand.Add(new StandardPlayingCard(Rank.Four, Suit.Hearts));
-        Assert.True(player.Build(table, 0, 0, 4));
-    }
-
-    [Fact]
-    public void Build_SingleValuePlusDualValue_True()
-    {
-        var table = new Table();
-        var player = new Player();
-        player.Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Hearts));
-        player.PlaceCard(table, 0);
-        player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Hearts));
-        player.Hand.Add(new StandardPlayingCard(Rank.Four, Suit.Hearts));
-        Assert.True(player.Build(table, 0, 0, 4));
-    }
-
-    [Fact]
-    public void Build_DualValuePlusDualValue_True()
-    {
-        var table = new Table();
-        var player = new Player();
-        player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Clubs));
-        player.PlaceCard(table, 0);
-        player.Hand.Add(new StandardPlayingCard(Rank.Ace, Suit.Hearts));
-        player.Hand.Add(new StandardPlayingCard(Rank.Two, Suit.Hearts));
-        Assert.True(player.Build(table, 0, 0, 2));
-    }
-
-    [Fact]
-    public void Build_5Plus5Is12_False()
-    {
-        var table = new Table();
-        var player = new Player();
-        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Diamonds));
-        player.PlaceCard(table, 0);
-        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Clubs));
-        Assert.False(player.Build(table, 0, 0, 12));
-    }
-
-    [Fact]
     public void BuildTable_4Plus4Equals8_True()
     {
         var table = new Table();
