@@ -25,6 +25,7 @@ public class MethodHandler
             }
             else
             {
+                inputs.ToList().RemoveAt(0);
                 input = inputs.Select(int.Parse).ToList();
             }
 
@@ -36,9 +37,9 @@ public class MethodHandler
                 case MethodType.PlaceCard:
                     return input.Count == 1 && players[currentPlayer].PlaceCard(table, input[0]);
                 case MethodType.Build:
-                    return input.Count == 3 && players[currentPlayer].Build(table, tableIdxs, input[0], input[1]);
+                    return players[currentPlayer].Build(table, tableIdxs, input[0], input[1]);
                 case MethodType.Take:
-                    return input.Count == 2 && players[currentPlayer].Take(table, tableIdxs, input[0]);
+                    return players[currentPlayer].Take(table, tableIdxs, input[0]);
                 case MethodType.ClearTable:
                     return input.Count == 1 && players[currentPlayer].ClearTable(table, input[0]);
                 default:
