@@ -22,12 +22,9 @@ public class MethodHandler
             {
                 var unsanitizedInput = firstInput.Trim('[', ']');
                 tableIdxs = unsanitizedInput.Split(',').Select(int.Parse).ToList();
-            }
-            else
-            {
                 inputs.ToList().RemoveAt(0);
-                input = inputs.Select(int.Parse).ToList();
             }
+            input = inputs.Select(int.Parse).ToList();
 
             var table = Program.GameState.Table;
             var currentPlayer = Program.GameState.CurrentPlayer;
