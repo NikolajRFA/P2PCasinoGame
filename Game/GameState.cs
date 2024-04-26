@@ -73,7 +73,22 @@ public class GameState
         {
             player.ClearCount -= minClears;
             var points = player.PointPile.Sum(card => CardToValue(card).Item2) + player.ClearCount;
-            if (LastToTake == player) points += 1;
+            if (LastToTake == player)
+            {
+                if (Table.Cards.Count > 0)
+                {
+                    foreach (var kvp in Table.Cards)
+                    {
+                        foreach (var card in kvp.Key.Cards)
+                        {
+                            player.PointPile.Add(card);
+                        }
+                    }
+                }
+
+                points += 1;
+            }
+
             if (playerWithMaxCards == player) points += 1;
             if (playerWithMaxSpades == player) points += 2;
             output.Add((player, points));
