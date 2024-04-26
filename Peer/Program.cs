@@ -73,7 +73,7 @@ public class Program
                 switch (input)
                 {
                     case "Place a card":
-                        method = "_place";
+                        method = "_placecard";
                         parameters.Append(Prompt.Input<string>("What card do you want to place?"));
                         break;
                     case "Build":
@@ -91,7 +91,6 @@ public class Program
                         parameters.Append(Prompt.Input<string>("What do you want to take on the table?"));
                         parameters.Append("];");
                         parameters.Append(Prompt.Input<string>("Which card on your hand do you want to take with?"));
-                        parameters.Append(';');
                         break;
                     case "Clear table":
                         method = "_cleartable";
@@ -99,6 +98,7 @@ public class Program
                         break;
                 }
                 var message = method + "_:_" + parameters;
+                Console.WriteLine(message);
                 Outbound.Broadcast(message);
             }
             else
