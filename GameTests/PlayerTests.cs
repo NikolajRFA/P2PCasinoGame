@@ -45,6 +45,20 @@ public class PlayerTests
     }
 
     [Fact]
+    public void Take_Table11Plus11WithHand11_True()
+    {
+        var table = new Table();
+        var player = new Player();
+        // Hack some cards onto the table
+        player.Hand.AddRange([new StandardPlayingCard(Rank.Jack, Suit.Clubs), new StandardPlayingCard(Rank.Jack, Suit.Diamonds)]);
+        player.PlaceCard(table, 0);
+        player.PlaceCard(table, 0);
+        // Setup player for take
+        player.Hand.Add(new StandardPlayingCard(Rank.Jack, Suit.Spades));
+        Assert.True(player.Take(table, [0, 1], 0));
+    }
+
+    [Fact]
     public void ClearTable_PlayerPlays5OfSpades_True()
     {
         var table = new Table();

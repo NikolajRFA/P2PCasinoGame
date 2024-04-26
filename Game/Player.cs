@@ -53,7 +53,7 @@ public class Player
         // Get possible sums when combining card values.
         var possibleSums = GetPossibleSums(tableCards.Select(kvp => kvp.Value).ToList());
         
-        if (possibleSums.Any(sum => GameState.CardToValue(Hand[handIndex]).Item1.Any(val => val == sum)))
+        if (possibleSums.Any(sum => GameState.CardToValue(Hand[handIndex]).Item1.Any(val => val == sum || sum % val == 0)))
         {
             foreach (var pile in tableCards.Select(kvp => kvp.Key))
             {
