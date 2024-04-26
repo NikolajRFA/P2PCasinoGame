@@ -2,17 +2,21 @@
 
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Text.Json;
 using Game;
+using Sharprompt;
 
 namespace Peer;
 
 public class Program
 {
     public const int Port = 8000;
+
     //public static int GameState { get; set; }
-    public static string MyIp = "172.29.0.10";
+    public static string MyIp = "172.29.0.13";
     public static GameState GameState { get; set; }
+
     public static void Main(string[] args)
     {
         // Get all IP addresses associated with the host
@@ -23,19 +27,20 @@ public class Program
         //MyIp = ipv4Addresses[0].ToString();
 
         Console.WriteLine($"I am {MyIp}");
-        string command;
+        //string command;
         var receiver = new Thread(Inbound.Receiver);
         receiver.Start();
         while (true)
         {
-            Console.WriteLine("Do you want to >await< or create a connection >manually<?");
-            command = Console.ReadLine();
-            if (command.Equals("await"))
+            //Console.WriteLine("Do you want to >await< or create a connection >manually<?");
+            var command = Prompt.Select("Do you want to host or join?", ["host", "join"]);
+            if (command.Equals("host"))
             {
-                var approval = Console.ReadLine();
-                if (approval.Equals("ok"))
+                var ready = Prompt.Confirm("Are you ready to start the game?");
+                if (ready)
                 {
-                    GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).Reverse().ToList());
+                    GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).Reverse()
+                        .ToList());
                     Outbound.Broadcast($"GAMESTATE{CommunicationHandler.ProtocolSplit}{GameState.Serialize()}");
                     Console.WriteLine(GameState.Serialize());
                     Console.WriteLine("GameState has been setup");
@@ -44,9 +49,8 @@ public class Program
                 }
             }
 
-            if (!command.Equals("manually")) continue;
-            Console.WriteLine("Enter the ip you want to manually connect to");
-            var serverIp = Console.ReadLine();
+            if (!command.Equals("join")) continue;
+            var serverIp = Prompt.Input<string>("Enter the ip you want to connect to");
             Outbound.NewSender(serverIp);
             break;
         }
@@ -61,9 +65,33 @@ public class Program
         {
             if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
             {
-                Console.WriteLine("Make your move!");
-                var message = Console.ReadLine() ?? "";
-                if (message == "QUIT") break;
+                string[] actions = ["Place a card", "Build", "Take", "Clear table", "QUIT"];
+                var input = Prompt.Select<string>("Make your move", actions);
+                if (input == "QUIT") break;
+                var method = "";
+                var parameters = new StringBuilder();
+                switch (input)
+                {
+                    case "Place a card":
+                        method = "_place";
+                        parameters.Append(Prompt.Input<string>("What card do you want to place?"));
+                        break;
+                    case "Build":
+                        method = "_build";
+                        parameters.Append(Prompt.Input<string>("What do you want to build on the table?"));
+                        parameters.Append(Prompt.Input<string>("Which card on your hand do you want to build with?"));
+                        break;
+                    case "Take":
+                        method = "_take";
+                        parameters.Append(Prompt.Input<string>("What do you want to take on the table?"));
+                        parameters.Append(Prompt.Input<string>("Which card on your hand do you want to take with?"));
+                        break;
+                    case "Clear table":
+                        method = "_cleartable";
+                        parameters.Append(Prompt.Input<string>("In what position do you hold five of spades?"));
+                        break;
+                }
+                var message = method + "_:_" + parameters;
                 Outbound.Broadcast(message);
             }
             else
@@ -78,7 +106,7 @@ public class Program
             var message = Console.ReadLine() ?? "";
             if (message == "QUIT") break;
             Outbound.Broadcast($"{message}");
-            
+
         }
 
         foreach (var sender in Outbound.Senders) sender.Value.Close();
