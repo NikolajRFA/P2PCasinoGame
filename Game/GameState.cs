@@ -22,7 +22,7 @@ public class GameState
         CurrentPlayer = currentPlayer;
         Deck = deck;
     }
-    
+
     public GameState(List<string> players)
     {
         players.ForEach(player => Players.Add(new Player { Name = player }));
@@ -115,10 +115,12 @@ public class GameState
 
     public string DisplayGame(string player)
     {
-        return $"\n{DisplayHand(player)}\n-----------------------------------------------------\n{DisplayTable()}\n";
-
+        return
+            $"\n{DisplayTable()}\n" +
+            $"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" +
+            $"\n{DisplayHand(player)}\n";
     }
-    
+
     public string Serialize()
     {
         return JsonSerializer.Serialize(this);

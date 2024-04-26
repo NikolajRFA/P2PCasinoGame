@@ -39,6 +39,7 @@ public class Player
 
             table.Cards.Remove(kvp);
         }
+
         kvps.First().Key.Cards.Push(Hand[handIndex]);
         Hand.RemoveAt(handIndex);
         kvps.First().Value.Clear();
@@ -52,20 +53,28 @@ public class Player
         var tableCards = table.Cards.Where((_, index) => indexes.Contains(index));
         // Get possible sums when combining card values.
         var possibleSums = GetPossibleSums(tableCards.Select(kvp => kvp.Value).ToList());
-        
-        if (possibleSums.Any(sum => GameState.CardToValue(Hand[handIndex]).Item1.Any(val => val == sum || sum % val == 0)))
+        // Using stringbuilder to describe what was taken
+        StringBuilder description = new();
+        var cardInHand = Hand[handIndex];
+
+        if (possibleSums.Any(sum =>
+                GameState.CardToValue(cardInHand).Item1.Any(val => val == sum || sum % val == 0)))
         {
             foreach (var pile in tableCards.Select(kvp => kvp.Key))
             {
                 for (var i = 0; i < pile.Cards.Count(); i++)
                 {
-                    PointPile.Add(pile.Cards.Pop());
+                    var card = pile.Cards.Pop();
+                    description.Append($"{card.Rank} of {card.Suit}\n");
+                    PointPile.Add(card);
                 }
             }
+
+            description.Append($"Was taken with: {cardInHand.Rank} of {cardInHand.Suit}");
             PointPile.Add(Hand[handIndex]);
-            
+
             if (table.Cards.Count == 1) ClearCount++;
-            
+
             indexes.Sort();
             indexes.Reverse();
             indexes.ForEach(idx => table.Cards.RemoveAt(idx));
@@ -102,7 +111,8 @@ public class Player
         return possibleSums;
     }
 
-    private static void GetSumsRecursively(List<List<int>> listOfLists, int index, int currentSum, List<int> possibleSums)
+    private static void GetSumsRecursively(List<List<int>> listOfLists, int index, int currentSum,
+        List<int> possibleSums)
     {
         if (index == listOfLists.Count)
         {
