@@ -78,13 +78,20 @@ public class Program
                         break;
                     case "Build":
                         method = "_build";
+                        parameters.Append('[');
                         parameters.Append(Prompt.Input<string>("What do you want to build on the table?"));
+                        parameters.Append("];");
                         parameters.Append(Prompt.Input<string>("Which card on your hand do you want to build with?"));
+                        parameters.Append(';');
+                        parameters.Append(Prompt.Input<string>("What is the value of the building?"));
                         break;
                     case "Take":
                         method = "_take";
+                        parameters.Append('[');
                         parameters.Append(Prompt.Input<string>("What do you want to take on the table?"));
+                        parameters.Append("];");
                         parameters.Append(Prompt.Input<string>("Which card on your hand do you want to take with?"));
+                        parameters.Append(';');
                         break;
                     case "Clear table":
                         method = "_cleartable";
