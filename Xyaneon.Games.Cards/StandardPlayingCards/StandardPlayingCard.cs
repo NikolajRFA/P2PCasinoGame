@@ -171,7 +171,46 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
 
         public override string ToString()
         {
-            return $"{Rank} of {Suit}";
+            string rankDisplay; 
+            switch (Rank)
+            {
+                case Rank.Ace:
+                    rankDisplay = "A";
+                    break;
+                case Rank.Queen:
+                    rankDisplay = "Q";
+                    break;
+                case Rank.Jack:
+                    rankDisplay = "J";
+                    break;
+                case Rank.King:
+                    rankDisplay = "K";
+                    break;
+                default:
+                    rankDisplay = ((int)Rank).ToString();
+                    break;
+            }
+
+            char suitDisplay = ' ';
+            switch (Suit)
+            {
+                case Suit.Clubs:
+                    suitDisplay = SuitSymbols.WhiteClubSuit;
+                    break;
+                case Suit.Diamonds:
+                    suitDisplay = SuitSymbols.WhiteDiamondSuit;
+                    break;
+                case Suit.Hearts:
+                    suitDisplay = SuitSymbols.WhiteHeartSuit;
+                    break;
+                case Suit.Spades:
+                    suitDisplay = SuitSymbols.WhiteSpadeSuit;
+                    break;
+                
+            }
+
+
+            return $"{rankDisplay} {suitDisplay}";
         }
     }
 }

@@ -63,4 +63,12 @@ public class GameStateTests
         deck2.Reverse();
         Assert.NotEqual(deck1.Draw(), deck2.Draw());
     }
+
+    [Fact]
+    public void NewGameState_Display_Rank()
+    {
+        var gameState = new GameState(["Alex", "Nikolaj", "Laust"]);
+        var display = gameState.DisplayHand("Alex");
+        _testOutputHelper.WriteLine(display);
+    }
 }
