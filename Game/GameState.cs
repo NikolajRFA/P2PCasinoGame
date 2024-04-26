@@ -60,6 +60,7 @@ public class GameState
             var fourCards = Deck.DrawAtMost(4);
             player.Hand.AddRange(fourCards);
         });
+        Console.WriteLine("Cards dealt!");
     }
 
     public List<(Player, int)> SumPoints()
@@ -93,6 +94,7 @@ public class GameState
             {
                 var results = SumPoints();
                 results.ForEach(result => Console.WriteLine($"{result.Item1.Name} has {result.Item2} points\n"));
+                Environment.Exit(1);
             }
             else
             {

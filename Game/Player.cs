@@ -80,6 +80,7 @@ public class Player
             indexes.Reverse();
             indexes.ForEach(idx => table.Cards.RemoveAt(idx));
             Hand.RemoveAt(handIndex);
+            Console.WriteLine(description);
             return true;
         }
 
