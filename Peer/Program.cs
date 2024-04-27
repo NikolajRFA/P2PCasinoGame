@@ -69,7 +69,10 @@ public class Program
             else
             {
                 Console.WriteLine("Wait for your turn...");
-                Thread.Sleep(5000);
+                while (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
+                {
+                    Thread.Sleep(500);
+                }
             }
         }
         /*
