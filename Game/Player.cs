@@ -89,6 +89,7 @@ public class Player
 
     public bool ClearTable(Table table, int handIndex)
     {
+        if (handIndex == -1) return false;
         if (Hand[handIndex] != new StandardPlayingCard(Rank.Five, Suit.Spades)) return false;
         foreach (var card in table.Cards)
         {
