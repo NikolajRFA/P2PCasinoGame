@@ -66,6 +66,8 @@ public class Program
             if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
             {
                 string[] actions = ["Place a card", "Build", "Take", "Clear table", "QUIT"];
+                var tableDisplay = GameState.DisplayTable();
+                var tableCards = tableDisplay.Split(" | ");
                 var input = Prompt.Select<string>("Make your move", actions);
                 if (input == "QUIT") break;
                 var method = "";
@@ -79,7 +81,7 @@ public class Program
                     case "Build":
                         method = "_build";
                         parameters.Append('[');
-                        parameters.Append(Prompt.Input<string>("What do you want to build on the table?"));
+                        parameters.Append(Prompt.Select<string>("Where do you want to build on the table?", tableCards));
                         parameters.Append("];");
                         parameters.Append(Prompt.Input<string>("Which card on your hand do you want to build with?"));
                         parameters.Append(';');
