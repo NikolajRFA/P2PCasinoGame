@@ -42,8 +42,9 @@ public class Program
                     GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).Reverse()
                         .ToList());
                     Outbound.Broadcast($"GAMESTATE{CommunicationHandler.ProtocolSplit}{GameState.Serialize()}");
-                    Console.WriteLine(GameState.Serialize());
-                    Console.WriteLine("GameState has been setup");
+                    //Console.WriteLine(GameState.Serialize());
+                    //Console.WriteLine("GameState has been setup");
+                    Console.Clear();
                     Console.WriteLine(GameState.DisplayGame(MyIp));
                     break;
                 }
@@ -66,8 +67,12 @@ public class Program
             if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
             {
                 string[] actions = ["Place a card", "Build", "Take", "Clear table", "QUIT"];
-                var tableDisplay = GameState.DisplayTable();
-                var tableCards = tableDisplay.Split(" | ");
+                var tableCards = GameState.Table.Cards.Select(pile =>
+                    string.Join(", ", pile.Key.Cards.Select(card => card.ToString())) +
+                    (pile.Key.Cards.Count > 1 ? $" ({pile.Value.Single()})" : "")).ToList();
+                var handCards = GameState.Players.Single(player => player.Name == MyIp).Hand
+                    .Select(card => card.ToString()).ToList();
+                List<string> idxs = [];
                 var input = Prompt.Select<string>("Make your move", actions);
                 if (input == "QUIT") break;
                 var method = "";
@@ -81,24 +86,31 @@ public class Program
                     case "Build":
                         method = "_build";
                         parameters.Append('[');
-                        parameters.Append(Prompt.Select<string>("Where do you want to build on the table?", tableCards));
+                        var buildCards = Prompt.MultiSelect("Where do you want to build on the table?", tableCards);
+                        idxs.AddRange(buildCards.Select(card => tableCards.IndexOf(card).ToString()));
+                        parameters.Append(string.Join(",", idxs));
                         parameters.Append("];");
-                        parameters.Append(Prompt.Input<string>("Which card on your hand do you want to build with?"));
+                        var handCard = Prompt.Select("Which card on your hand do you want to build with?", handCards);
+                        parameters.Append(handCards.IndexOf(handCard));
                         parameters.Append(';');
                         parameters.Append(Prompt.Input<string>("What is the value of the building?"));
                         break;
                     case "Take":
                         method = "_take";
                         parameters.Append('[');
-                        parameters.Append(Prompt.Input<string>("What do you want to take on the table?"));
+                        var takeCards = Prompt.MultiSelect("What do you want to take on the table?", tableCards);
+                        idxs.AddRange(takeCards.Select(card => tableCards.IndexOf(card).ToString()));
+                        parameters.Append(string.Join(",", idxs));
                         parameters.Append("];");
-                        parameters.Append(Prompt.Input<string>("Which card on your hand do you want to take with?"));
+                        handCard = Prompt.Select("Which card on your hand do you want to take with?", handCards);
+                        parameters.Append(handCards.IndexOf(handCard));
                         break;
                     case "Clear table":
                         method = "_cleartable";
                         parameters.Append(Prompt.Input<string>("In what position do you hold five of spades?"));
                         break;
                 }
+
                 var message = method + "_:_" + parameters;
                 Console.WriteLine(message);
                 Outbound.Broadcast(message);
