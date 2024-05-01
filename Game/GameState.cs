@@ -7,10 +7,10 @@ namespace Game;
 
 public class GameState
 {
-    public List<Player> Players { get; set; } = [];
-    public Table Table { get; set; } = new();
+    public List<Player> Players { get; init; } = [];
+    public Table Table { get; init; } = new();
     public int CurrentPlayer { get; set; }
-    public StandardPlayingCardDeck Deck { get; set; } = new StandardPlayingCardDeck();
+    public StandardPlayingCardDeck Deck { get; init; } = new StandardPlayingCardDeck();
     public Player LastToTake { get; set; }
 
     // Deserialization constructor
@@ -98,7 +98,6 @@ public class GameState
 
     public void AdvanceTurn(string method)
     {
-        var lowered = method.ToLower();
         if (method.StartsWith("_take")) LastToTake = Players[CurrentPlayer];
         if (CurrentPlayer < Players.Count - 1) CurrentPlayer++;
         else CurrentPlayer = 0;

@@ -14,7 +14,7 @@ public class Program
     public const int Port = 8000;
 
     //public static int GameState { get; set; }
-    public static string MyIp = "172.29.0.10";
+    public static string MyIp = "172.29.0.13";
     public static GameState GameState { get; set; }
 
     public static void Main(string[] args)
@@ -42,9 +42,9 @@ public class Program
                     GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).Reverse()
                         .ToList());
                     Outbound.Broadcast($"GAMESTATE{CH.ProtocolSplit}{GameState.Serialize()}");
-                    //Console.WriteLine(GameState.Serialize());
+                    Console.WriteLine(GameState.Serialize());
                     //Console.WriteLine("GameState has been setup");
-                    Console.Clear();
+                    //Console.Clear();
                     Console.WriteLine(GameState.DisplayGame(MyIp));
                     break;
                 }
@@ -66,10 +66,11 @@ public class Program
         {
             if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
             {
-                string[] actions = ["Place a card", "Build", "Take", "Clear table", "QUIT"];
                 var tableCards = GameState.Table.Cards.Select(pile =>
                     string.Join(", ", pile.Key.Cards.Select(card => card.ToString())) +
                     (pile.Key.Cards.Count > 1 ? $" ({pile.Value.Single()})" : "")).ToList();
+                string[] actions = ["Place a card", "Clear table", "QUIT"];
+                if (tableCards.Count > 0) actions.Concat(["Build", "Take"]);
                 var handCards = GameState.Players.Single(player => player.Name == MyIp).Hand
                     .Select(card => card.ToString()).ToList();
                 List<int> idxs = [];
@@ -104,7 +105,7 @@ public class Program
                     case "Clear table":
                         method = "_cleartable";
                         //TODO Five of spades will be renamed - change to new style
-                        parameters.Append(CH.BuildParameters(handCards.IndexOf("5 \u2664")));
+                        parameters.Append(CH.BuildParameters(handCards.IndexOf("5 of Spades")));
                         break;
                 }
 
