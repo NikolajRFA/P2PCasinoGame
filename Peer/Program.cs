@@ -41,7 +41,7 @@ public class Program
                 {
                     GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).Reverse()
                         .ToList());
-                    Outbound.Broadcast($"GAMESTATE{CommunicationHandler.ProtocolSplit}{GameState.Serialize()}");
+                    Outbound.Broadcast($"GAMESTATE{CH.ProtocolSplit}{GameState.Serialize()}");
                     //Console.WriteLine(GameState.Serialize());
                     //Console.WriteLine("GameState has been setup");
                     Console.Clear();
@@ -72,7 +72,7 @@ public class Program
                     (pile.Key.Cards.Count > 1 ? $" ({pile.Value.Single()})" : "")).ToList();
                 var handCards = GameState.Players.Single(player => player.Name == MyIp).Hand
                     .Select(card => card.ToString()).ToList();
-                List<string> idxs = [];
+                List<int> idxs = [];
                 var input = Prompt.Select<string>("Make your move", actions);
                 if (input == "QUIT") break;
                 var method = "";
@@ -82,33 +82,29 @@ public class Program
                     case "Place a card":
                         method = "_placecard";
                         var card = Prompt.Select<string>("What card do you want to place?", handCards);
-                        parameters.Append(handCards.IndexOf(card));
+                        parameters.Append(CH.BuildParameters(handCards.IndexOf(card)));
                         break;
                     case "Build":
                         method = "_build";
-                        parameters.Append('[');
                         var buildCards = Prompt.MultiSelect("Where do you want to build on the table?", tableCards);
-                        idxs.AddRange(buildCards.Select(card => tableCards.IndexOf(card).ToString()));
-                        parameters.Append(string.Join(",", idxs));
-                        parameters.Append("];");
+                        idxs.AddRange(buildCards.Select(card => tableCards.IndexOf(card)));
                         var handCard = Prompt.Select("Which card on your hand do you want to build with?", handCards);
-                        parameters.Append(handCards.IndexOf(handCard));
-                        parameters.Append(';');
-                        parameters.Append(Prompt.Input<string>("What is the value of the building?"));
+                        var value = Prompt.Input<int>("What is the value of the building?");
+                        parameters.Append(
+                            CH.BuildParameters(idxs, handCards.IndexOf(handCard), value));
+
                         break;
                     case "Take":
                         method = "_take";
-                        parameters.Append('[');
                         var takeCards = Prompt.MultiSelect("What do you want to take on the table?", tableCards);
-                        idxs.AddRange(takeCards.Select(card => tableCards.IndexOf(card).ToString()));
-                        parameters.Append(string.Join(",", idxs));
-                        parameters.Append("];");
+                        idxs.AddRange(takeCards.Select(card => tableCards.IndexOf(card)));
                         handCard = Prompt.Select("Which card on your hand do you want to take with?", handCards);
-                        parameters.Append(handCards.IndexOf(handCard));
+                        parameters.Append(CH.BuildParameters(idxs, handCards.IndexOf(handCard)));
                         break;
                     case "Clear table":
                         method = "_cleartable";
-                        parameters.Append(handCards.IndexOf("Five of Spades"));
+                        //TODO Five of spades will be renamed - change to new style
+                        parameters.Append(CH.BuildParameters(handCards.IndexOf("Five of Spades")));
                         break;
                 }
 

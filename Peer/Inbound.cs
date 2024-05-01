@@ -23,7 +23,7 @@ public class Inbound
             var senderIp = client.Client.RemoteEndPoint!.ToString()!.Split(":").First();
             if (!Outbound.Senders.ContainsKey(senderIp))
                 Outbound.NewSender(senderIp);
-            var message = "IP" + CommunicationHandler.ProtocolSplit +
+            var message = "IP" + CH.ProtocolSplit +
                           string.Join(";", Outbound.Senders.Select(x => x.Key));
             Outbound.Broadcast(message);
             var clientThread = new Thread(HandleClientComm);
@@ -56,12 +56,12 @@ public class Inbound
             var remoteIp = tcpClient.Client.RemoteEndPoint.ToString().Split(":").First();
             Console.WriteLine($"{remoteIp} Received: {dataReceived}");
             // Handle commands
-            var (method, data) = CommunicationHandler.GetPayload(dataReceived);
+            var (method, data) = CH.GetPayload(dataReceived);
 
             switch (method)
             {
                 case not null when method.StartsWith("IP"):
-                    CommunicationHandler.Ips(CommunicationHandler.GetIps(string.Join(";", data)));
+                    CH.Ips(CH.GetIps(string.Join(";", data)));
                     break;
                 case not null when method.StartsWith("GAMESTATE"):
                     Console.WriteLine(data);

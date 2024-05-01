@@ -1,6 +1,6 @@
 ﻿namespace Peer;
 
-public class CommunicationHandler : ICommunicationHandler
+public class CH : ICommunicationHandler
 {
     public const string ProtocolSplit = "_:_";
 
