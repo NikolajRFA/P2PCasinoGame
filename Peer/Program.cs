@@ -81,7 +81,8 @@ public class Program
                 {
                     case "Place a card":
                         method = "_placecard";
-                        parameters.Append(Prompt.Input<string>("What card do you want to place?"));
+                        var card = Prompt.Select<string>("What card do you want to place?", handCards);
+                        parameters.Append(handCards.IndexOf(card));
                         break;
                     case "Build":
                         method = "_build";
@@ -107,7 +108,7 @@ public class Program
                         break;
                     case "Clear table":
                         method = "_cleartable";
-                        parameters.Append(Prompt.Input<string>("In what position do you hold five of spades?"));
+                        parameters.Append(handCards.IndexOf("Five of Spades"));
                         break;
                 }
 
