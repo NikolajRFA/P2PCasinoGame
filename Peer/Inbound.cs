@@ -65,11 +65,7 @@ public class Inbound
                     break;
                 case not null when method.StartsWith("GAMESTATE"):
                     Console.WriteLine(data);
-                    var options = new JsonSerializerOptions
-                    {
-                        IncludeFields = true,
-                    };
-                    Program.GameState = JsonSerializer.Deserialize<GameState>(data[0], options)!;
+                    Program.GameState = GameState.Deserialize(data[0]);
                     break;
                 case not null when method.StartsWith('_'):
                     MethodHandler.CallMethod(method, data);
