@@ -115,8 +115,9 @@ public class Program
             else
             {
                 Console.WriteLine("Wait for your turn...");
-                while (GameState.Players[GameState.CurrentPlayer].Name != MyIp)
+                while (true)
                 {
+                    if (GameState.Players[GameState.CurrentPlayer].Name == MyIp) break;
                     Thread.Sleep(500);
                 }
             }
