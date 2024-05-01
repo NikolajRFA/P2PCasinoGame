@@ -14,7 +14,7 @@ public class Program
     public const int Port = 8000;
 
     //public static int GameState { get; set; }
-    public static string MyIp = "172.29.0.13";
+    public static string MyIp = "172.29.0.10";
     public static GameState GameState { get; set; }
 
     public static void Main(string[] args)
@@ -115,7 +115,7 @@ public class Program
             else
             {
                 Console.WriteLine("Wait for your turn...");
-                while (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
+                while (GameState.Players[GameState.CurrentPlayer].Name != MyIp)
                 {
                     Thread.Sleep(500);
                 }
