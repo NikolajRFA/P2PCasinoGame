@@ -104,7 +104,7 @@ public class Program
                     case "Clear table":
                         method = "_cleartable";
                         //TODO Five of spades will be renamed - change to new style
-                        parameters.Append(CH.BuildParameters(handCards.IndexOf("Five of Spades")));
+                        parameters.Append(CH.BuildParameters(handCards.IndexOf("5 \u2664")));
                         break;
                 }
 
