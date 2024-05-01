@@ -69,8 +69,8 @@ public class Program
                 var tableCards = GameState.Table.Cards.Select(pile =>
                     string.Join(", ", pile.Key.Cards.Select(card => card.ToString())) +
                     (pile.Key.Cards.Count > 1 ? $" ({pile.Value.Single()})" : "")).ToList();
-                string[] actions = ["Place a card", "Clear table", "QUIT"];
-                if (tableCards.Count > 0) actions.Concat(["Build", "Take"]);
+                string[] actions = ["Place a card", "Build", "Take", "Clear table", "QUIT"];
+                if (!(tableCards.Count > 0)) actions = actions.Where(action => action is not ("Build" or "Take")).ToArray();
                 var handCards = GameState.Players.Single(player => player.Name == MyIp).Hand
                     .Select(card => card.ToString()).ToList();
                 List<int> idxs = [];

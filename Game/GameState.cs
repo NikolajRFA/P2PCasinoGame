@@ -108,7 +108,6 @@ public class GameState
             {
                 var results = SumPoints();
                 results.ForEach(result => Console.WriteLine($"{result.Item1.Name} has {result.Item2} points\n"));
-                Environment.Exit(1);
             }
             else
             {
