@@ -3,6 +3,7 @@
 public class CommunicationHandler : ICommunicationHandler
 {
     public const string ProtocolSplit = "_:_";
+
     public static void Ips(List<string> ips)
     {
         foreach (var ip in ips)
@@ -15,6 +16,15 @@ public class CommunicationHandler : ICommunicationHandler
         return data.Split(ProtocolSplit).First();
     }
 
+    public static string BuildParameters(IEnumerable<int> listValues, params int[] values)
+    {
+        return $"[{string.Join(",", listValues)}];{BuildParameters(values)}";
+    }
+
+    public static string BuildParameters(params int[] values)
+    {
+        return $"{string.Join(";", values)}";
+    }
     public static List<string> GetParameters(string data)
     {
         // ["[1,2,3]", "1", "2"]
