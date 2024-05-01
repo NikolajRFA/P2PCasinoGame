@@ -171,7 +171,7 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
 
         public override string ToString()
         {
-            string rankDisplay; 
+            string rankDisplay;
             switch (Rank)
             {
                 case Rank.Ace:
@@ -191,7 +191,7 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
                     break;
             }
 
-            char suitDisplay = ' ';
+            /*char suitDisplay = ' ';
             switch (Suit)
             {
                 case Suit.Clubs:
@@ -206,11 +206,11 @@ namespace Xyaneon.Games.Cards.StandardPlayingCards
                 case Suit.Spades:
                     suitDisplay = SuitSymbols.WhiteSpadeSuit;
                     break;
-                
-            }
+
+            }*/
 
 
-            return $"{rankDisplay} {suitDisplay}";
+            return $"{rankDisplay} of {Suit}";
         }
     }
 }
