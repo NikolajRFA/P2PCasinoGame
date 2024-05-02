@@ -73,6 +73,10 @@ public class Inbound
                     Program.GameState.AdvanceTurn(method);
                     Program.GameState.DisplayGame(Program.MyIp);
                     break;
+                case not null when method.Contains("has quit the game"):
+                    Console.WriteLine("Quitting the game");
+                    Environment.Exit(1);
+                    break;
                 default:
                     Console.WriteLine("Unrecognized input pattern");
                     break;

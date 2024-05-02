@@ -70,19 +70,35 @@ public class Program
                     string.Join(", ", pile.Key.Cards.Select(card => card.ToString())) +
                     (pile.Key.Cards.Count > 1 ? $" ({pile.Value.Single()})" : "")).ToList();
                 string[] actions = ["Place a card", "Build", "Take", "Clear table", "QUIT"];
-                if (!(tableCards.Count > 0)) actions = actions.Where(action => action is not ("Build" or "Take")).ToArray();
+                if (!(tableCards.Count > 0))
+                    actions = actions.Where(action => action is not ("Build" or "Take")).ToArray();
                 var handCards = GameState.Players.Single(player => player.Name == MyIp).Hand
                     .Select(card => card.ToString()).ToList();
+                if (handCards.All(card => card != "5 of Spades"))
+                    actions = actions.Where(action => action is not ("Clear table")).ToArray();
                 List<int> idxs = [];
-                var input = Prompt.Select<string>("Make your move", actions);
-                if (input == "QUIT") break;
+                var input = Prompt.Select("Make your move", actions);
+                if (input == "QUIT")
+                {
+                    var confirmation = Prompt.Confirm("Are you sure you want to quit?");
+                    if (confirmation)
+                    {
+                        Outbound.Broadcast($"{MyIp} has quit the game");
+                        Environment.Exit(1);
+                    }
+                    else
+                    {
+                        input = Prompt.Select("Make your move", actions);
+                    }
+                }
+
                 var method = "";
                 var parameters = new StringBuilder();
                 switch (input)
                 {
                     case "Place a card":
                         method = "_placecard";
-                        var card = Prompt.Select<string>("What card do you want to place?", handCards);
+                        var card = Prompt.Select("What card do you want to place?", handCards);
                         parameters.Append(CH.BuildParameters(handCards.IndexOf(card)));
                         break;
                     case "Build":
