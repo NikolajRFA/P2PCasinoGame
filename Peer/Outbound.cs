@@ -18,7 +18,7 @@ public class Outbound
             if (MethodHandler.CallMethod(method, parameters))
             {
                 Program.GameState.AdvanceTurn(method);
-                Console.WriteLine(Program.GameState.DisplayGame(Program.MyIp));
+                Program.GameState.DisplayGame(Program.MyIp);
                 foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
             }
             else

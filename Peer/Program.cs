@@ -45,7 +45,7 @@ public class Program
                     Console.WriteLine(GameState.Serialize());
                     //Console.WriteLine("GameState has been setup");
                     //Console.Clear();
-                    Console.WriteLine(GameState.DisplayGame(MyIp));
+                    GameState.DisplayGame(MyIp);
                     break;
                 }
             }

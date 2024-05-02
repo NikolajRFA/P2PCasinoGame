@@ -129,12 +129,20 @@ public class GameState
             $"Table: {string.Join(" | ", Table.Cards.Select(pile => string.Join(", ", pile.Key.Cards.Select(card => card.ToString())) + (pile.Key.Cards.Count > 1 ? $" ({pile.Value.Single()})" : "")))}";
     }
 
-    public string DisplayGame(string player)
+    public void DisplayGame(string player)
     {
-        return
-            $"\n{DisplayTable()}\n" +
-            $"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" +
-            $"\n{DisplayHand(player)}\n";
+        var displayTable = DisplayTable();
+        var displayHand = DisplayHand(player);
+        var maxLength = displayHand.Length > displayTable.Length ? displayHand.Length : displayTable.Length;
+        var separator = new string('-', maxLength);
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine($"{separator}" +
+                          $"\n{displayTable}\n" +
+                          $"\n{separator}\n" +
+                          $"\n{displayHand}\n" +
+                          $"{separator}");
+        Console.ResetColor();
     }
 
     public string Serialize()
