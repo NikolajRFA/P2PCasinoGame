@@ -54,6 +54,7 @@ public class Inbound
 
             var dataReceived = Encoding.ASCII.GetString(message, 0, bytesRead);
             var remoteIp = tcpClient.Client.RemoteEndPoint.ToString().Split(":").First();
+            Console.Clear();
             Console.WriteLine($"{remoteIp} Received: {dataReceived}");
             // Handle commands
             var (method, data) = CH.GetPayload(dataReceived);

@@ -12,6 +12,7 @@ public class Outbound
 
     public static void Broadcast(string message)
     {
+        Console.Clear();
         var (method, parameters) = CH.GetPayload(message);
         if (method.StartsWith('_'))
         {
