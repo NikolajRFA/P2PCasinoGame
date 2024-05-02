@@ -96,7 +96,8 @@ public class Player
         {
             PointPile.AddRange(card.Key.Cards);
         }
-
+        PointPile.Add(Hand[handIndex]);
+        ClearCount++;
         Hand.RemoveAt(handIndex);
         table.Cards.Clear();
         return true;

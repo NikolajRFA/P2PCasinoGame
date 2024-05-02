@@ -69,4 +69,16 @@ public class PlayerTests
 
         Assert.True(player.ClearTable(table, 0));
     }
+
+    [Fact]
+    public void ClearTable_PlayerClearsAnEmptyTable_True()
+    {
+        var table = new Table();
+        var player = new Player();
+        player.Hand.Add(new StandardPlayingCard(Rank.Five, Suit.Spades));
+
+        Assert.True(player.ClearTable(table, 0));
+        Assert.Equal(1, player.ClearCount);
+    }
+    
 }
