@@ -63,6 +63,7 @@ public class GameState
         Console.WriteLine("Cards dealt!");
     }
 
+    // TODO: Make points more transparent. I.e. print out where the points come from and how many clear count each player has.
     public List<(Player, int)> SumPoints()
     {
         List<(Player, int)> output = [];
