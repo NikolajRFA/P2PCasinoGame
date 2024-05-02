@@ -71,7 +71,7 @@ public class GameStateTests
         var display = gameState.DisplayHand("Alex");
         _testOutputHelper.WriteLine(display);
     }
-    
+
     [Fact]
     public void CanSumToTarget_GenerateCombinationsFromListListInt_Correct()
     {
@@ -83,6 +83,7 @@ public class GameStateTests
             GenerateCombinations([[5], [5], [10, 16], [7], [2], [1, 14], [8], [2, 15], [1]]),
             list => CanSumToTarget(list, 10)
         );
+        Assert.DoesNotContain(GenerateCombinations([[4], [6]]), list => CanSumToTarget(list, 2));
 
         bool CanSumToTarget(List<int> numbers, int target)
         {
