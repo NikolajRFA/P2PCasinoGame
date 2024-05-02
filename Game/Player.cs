@@ -63,7 +63,8 @@ public class Player
         {
             foreach (var pile in tableCards.Select(kvp => kvp.Key))
             {
-                for (var i = 0; i < pile.Cards.Count(); i++)
+                var count = pile.Cards.Count;
+                for (var i = 0; i < count; i++)
                 {
                     var card = pile.Cards.Pop();
                     description.Append($"{card.Rank} of {card.Suit}\n");
