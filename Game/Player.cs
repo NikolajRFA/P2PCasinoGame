@@ -30,7 +30,7 @@ public class Player
         var cardValues = GameState.CardToValue(Hand[handIndex]).Item1;
 
         //if (!CompareValues(value, kvps.Select(kvp => kvp.Value).Append(cardValues).ToList())) return false;
-        if (GenerateCombinations(kvps.Select(kvp => kvp.Value).Append(cardValues).ToList())
+        if (!GenerateCombinations(kvps.Select(kvp => kvp.Value).Append(cardValues).ToList())
             .Any(list => CanSumToTarget(list, value))) return false;
 
         foreach (var kvp in kvps.Where((_, idx) => idx != 0))
