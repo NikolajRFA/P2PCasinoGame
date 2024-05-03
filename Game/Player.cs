@@ -29,7 +29,7 @@ public class Player
         var kvps = table.Cards.Where((_, index) => indexes.Contains(index)).ToList();
         var cardValues = GameState.CardToValue(Hand[handIndex]).Item1;
 
-        //if (!CompareValues(value, kvps.Select(kvp => kvp.Value).Append(cardValues).ToList())) return false;
+        
         if (!GenerateCombinations(kvps.Select(kvp => kvp.Value).Append(cardValues).ToList())
             .Any(list => CanSumToTarget(list, value))) return false;
 
@@ -107,6 +107,8 @@ public class Player
     private static bool CanSumToTarget(List<int> numbers, int target)
         {
             if (numbers.Any(number => number > target)) return false;
+            // If the numbers sum to the target, we can return true
+            if (numbers.Sum() == target) return true;
             // Calculate the total sum of the list
             int totalSum = numbers.Sum();
 
