@@ -76,11 +76,11 @@ public class GameState
             var points = player.PointPile.Sum(card => CardToValue(card).Item2) + player.ClearCount;
             if (LastToTake == player)
             {
-                if (Table.Cards.Count > 0)
+                if (Table.Piles.Count > 0)
                 {
-                    foreach (var kvp in Table.Cards)
+                    foreach (var pile in Table.Piles)
                     {
-                        foreach (var card in kvp.Key.Cards)
+                        foreach (var card in pile.Pile.Cards)
                         {
                             player.PointPile.Add(card);
                         }
@@ -126,7 +126,7 @@ public class GameState
     public string DisplayTable()
     {
         return
-            $"Table: {string.Join(" | ", Table.Cards.Select(pile => string.Join(", ", pile.Key.Cards.Select(card => card.ToString())) + (pile.Key.Cards.Count > 1 ? $" ({pile.Value.Single()})" : "")))}";
+            $"Table: {string.Join(" | ", Table.Piles.Select(pile => string.Join(", ", pile.Pile.Cards.Select(card => card.ToString())) + (pile.Pile.Cards.Count > 1 ? $" ({pile.Values.Single()})" : "")))}";
     }
 
     public void DisplayGame(string player)

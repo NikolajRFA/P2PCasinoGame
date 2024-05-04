@@ -66,9 +66,9 @@ public class Program
         {
             if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
             {
-                var tableCards = GameState.Table.Cards.Select(pile =>
-                    string.Join(", ", pile.Key.Cards.Select(card => card.ToString())) +
-                    (pile.Key.Cards.Count > 1 ? $" ({pile.Value.Single()})" : "")).ToList();
+                var tableCards = GameState.Table.Piles.Select(pile =>
+                    string.Join(", ", pile.Pile.Cards.Select(card => card.ToString())) +
+                    (pile.Pile.Cards.Count > 1 ? $" ({pile.Values.Single()})" : "")).ToList();
                 string[] actions = ["Place a card", "Build", "Take", "Clear table", "QUIT"];
                 if (!(tableCards.Count > 0))
                     actions = actions.Where(action => action is not ("Build" or "Take")).ToArray();
