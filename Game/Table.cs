@@ -5,15 +5,16 @@ namespace Game;
 
 public class Table
 {
-    public List<ValuePile> Piles { get; set; } = [];
+    public List<CasinoDrawPile> Piles { get; set; } = [];
 
     public void AddCards(IEnumerable<StandardPlayingCard> cards)
     {
         foreach (var card in cards)
         {
-            var drawPile = new DrawPile<StandardPlayingCard>(isFaceUp: true);
-            drawPile.PlaceOnTop(card);
-            Piles.Add(new ValuePile(drawPile, GameState.CardToValue(card).Item1));
+            var pile = new CasinoDrawPile(isFaceUp: true);
+            pile.PlaceOnTop(card);
+
+            Piles.Add(pile);
         }
     }
 
