@@ -5,7 +5,7 @@ namespace Game;
 
 public class Table
 {
-    public List<KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>> Cards { get; set; } = [];
+    public List<ValuePile> Piles { get; set; } = [];
 
     public void AddCards(IEnumerable<StandardPlayingCard> cards)
     {
@@ -13,10 +13,13 @@ public class Table
         {
             var drawPile = new DrawPile<StandardPlayingCard>(isFaceUp: true);
             drawPile.PlaceOnTop(card);
-            Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(
-                drawPile,
-                GameState.CardToValue(card).Item1
-            ));
+            Piles.Add(new ValuePile(drawPile, GameState.CardToValue(card).Item1));
         }
+    }
+
+    public class ValuePile(DrawPile<StandardPlayingCard> pile, List<int> values)
+    {
+        public DrawPile<StandardPlayingCard> Pile { get; set; } = pile;
+        public List<int> Values { get; set; } = values;
     }
 }

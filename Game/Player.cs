@@ -15,7 +15,7 @@ public class Player
     {
         var drawPile = new DrawPile<StandardPlayingCard>(isFaceUp: true);
         drawPile.PlaceOnTop(Hand[handIndex]);
-        table.Cards.Add(new KeyValuePair<DrawPile<StandardPlayingCard>, List<int>>(drawPile,
+        table.Piles.Add(new Table.ValuePile(drawPile,
             GameState.CardToValue(Hand[handIndex]).Item1));
         Hand.RemoveAt(handIndex);
 
@@ -26,43 +26,43 @@ public class Player
     {
         var filteredList = Hand.Where((_, index) => index != handIndex);
         if (!filteredList.Any(card => GameState.CardToValue(card).Item1.Contains(value))) return false;
-        var kvps = table.Cards.Where((_, index) => indexes.Contains(index)).ToList();
+        var kvps = table.Piles.Where((_, index) => indexes.Contains(index)).ToList();
         var cardValues = GameState.CardToValue(Hand[handIndex]).Item1;
 
         
-        if (!GenerateCombinations(kvps.Select(kvp => kvp.Value).Append(cardValues).ToList())
+        if (!GenerateCombinations(kvps.Select(kvp => kvp.Values).Append(cardValues).ToList())
             .Any(list => CanSumToTarget(list, value))) return false;
 
         foreach (var kvp in kvps.Where((_, idx) => idx != 0))
         {
-            foreach (var card in kvp.Key.Cards)
+            foreach (var card in kvp.Pile.Cards)
             {
-                kvps.First().Key.Cards.Push(card);
+                kvps.First().Pile.Cards.Push(card);
             }
 
-            table.Cards.Remove(kvp);
+            table.Piles.Remove(kvp);
         }
 
-        kvps.First().Key.Cards.Push(Hand[handIndex]);
+        kvps.First().Pile.Cards.Push(Hand[handIndex]);
         Hand.RemoveAt(handIndex);
-        kvps.First().Value.Clear();
-        kvps.First().Value.Add(value);
+        kvps.First().Values.Clear();
+        kvps.First().Values.Add(value);
 
         return true;
     }
 
     public bool Take(Table table, List<int> indexes, int handIndex)
     {
-        var tableCards = table.Cards.Where((_, index) => indexes.Contains(index));
+        var tableCards = table.Piles.Where((_, index) => indexes.Contains(index));
         // Get all value combinaions from cards on the table.
-        var listCombinations = GenerateCombinations(tableCards.Select(kvp => kvp.Value).ToList());
+        var listCombinations = GenerateCombinations(tableCards.Select(kvp => kvp.Values).ToList());
         // Using stringbuilder to describe what was taken
         StringBuilder description = new();
         var cardInHand = Hand[handIndex];
         
         if (listCombinations.Any(list => GameState.CardToValue(cardInHand).Item1.Any(val => CanSumToTarget(list, val))))
         {
-            foreach (var pile in tableCards.Select(kvp => kvp.Key))
+            foreach (var pile in tableCards.Select(kvp => kvp.Pile))
             {
                 var count = pile.Cards.Count;
                 for (var i = 0; i < count; i++)
@@ -76,11 +76,11 @@ public class Player
             description.Append($"Was taken with: {cardInHand.Rank} of {cardInHand.Suit}");
             PointPile.Add(Hand[handIndex]);
 
-            if (table.Cards.Count == 1) ClearCount++;
+            if (table.Piles.Count == 1) ClearCount++;
 
             indexes.Sort();
             indexes.Reverse();
-            indexes.ForEach(idx => table.Cards.RemoveAt(idx));
+            indexes.ForEach(idx => table.Piles.RemoveAt(idx));
             Hand.RemoveAt(handIndex);
             Console.WriteLine(description);
             return true;
@@ -93,14 +93,14 @@ public class Player
     {
         if (handIndex == -1) return false;
         if (Hand[handIndex] != new StandardPlayingCard(Rank.Five, Suit.Spades)) return false;
-        foreach (var card in table.Cards)
+        foreach (var card in table.Piles)
         {
-            PointPile.AddRange(card.Key.Cards);
+            PointPile.AddRange(card.Pile.Cards);
         }
         PointPile.Add(Hand[handIndex]);
         ClearCount++;
         Hand.RemoveAt(handIndex);
-        table.Cards.Clear();
+        table.Piles.Clear();
         return true;
     }
 

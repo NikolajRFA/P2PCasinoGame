@@ -24,7 +24,7 @@ public class GameStateTests
                 $"Player: {player.Name} has cards {string.Join(", ", player.Hand.Select(card => $"{card.Rank} of {card.Suit}"))}");
             Assert.True(player.Hand.Count == 4);
         });
-        gameState.Table.Cards.ForEach(kvp => Assert.NotEmpty(kvp.Key.Cards));
+        gameState.Table.Piles.ForEach(kvp => Assert.NotEmpty(kvp.Pile.Cards));
     }
 
     [Fact]
