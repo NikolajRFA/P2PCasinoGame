@@ -20,10 +20,10 @@ public class Inbound
 
             Console.WriteLine($"Client connected. {client.Client.RemoteEndPoint}");
             var senderIp = client.Client.RemoteEndPoint!.ToString()!.Split(":").First();
-            if (Outbound.Senders.All(sender => sender.IpAddress != senderIp))
-                Outbound.NewSender(senderIp);
+            if (Outbound.Recipients.All(recipient => recipient.IpAddress != senderIp))
+                Outbound.NewRecipient(senderIp);
             var message = "IP" + CH.ProtocolSplit +
-                          string.Join(";", Outbound.Senders.Select(x => x.IpAddress));
+                          string.Join(";", Outbound.Recipients.Select(x => x.IpAddress));
             Outbound.Broadcast(message);
             var clientThread = new Thread(HandleClientComm);
             clientThread.Start(client);
@@ -66,6 +66,11 @@ public class Inbound
                 case not null when method.StartsWith("GAMESTATE"):
                     Console.WriteLine(data);
                     Program.GameState = GameState.Deserialize(data[0]);
+                    break;
+                case not null when method.StartsWith("PUB"):
+                    var modulus = Encoding.ASCII.GetBytes(data.First());
+                    var exponent = Encoding.ASCII.GetBytes(data.Last());
+                    Outbound.Recipients.Single(recipient => recipient.IpAddress == remoteIp).SetPublicKey(modulus, exponent);
                     break;
                 case not null when method.StartsWith('_'):
                     MethodHandler.CallMethod(method, data);

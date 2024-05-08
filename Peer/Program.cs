@@ -2,6 +2,7 @@
 
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Game;
@@ -14,8 +15,10 @@ public class Program
     public const int Port = 8000;
 
     //public static int GameState { get; set; }
-    public static string MyIp = "172.29.0.13";
+    public static string MyIp = "172.29.0.10";
     public static GameState GameState { get; set; }
+    private static RSA _rsa { get; set; } = RSA.Create();
+    private static Aes _aes { get; set; } = Aes.Create();
 
     public static void Main(string[] args)
     {
@@ -196,7 +199,9 @@ public class Program
     private static void JoinLobby()
     {
         var serverIp = Prompt.Input<string>("Enter the ip you want to connect to");
-        Outbound.NewSender(serverIp);
+        Outbound.NewRecipient(serverIp);
+        var rsaParams = _rsa.ExportParameters(false);
+        Outbound.Broadcast($"PUB{CH.ProtocolSplit}{rsaParams.Modulus};{rsaParams.Exponent}");
     }
 
     /// <summary>
@@ -207,7 +212,10 @@ public class Program
     {
         var ready = Prompt.Confirm("Are you ready to start the game?");
         if (!ready) return false;
-        GameState = new GameState(Outbound.Senders.Select(sender => sender.IpAddress).Append(MyIp).Reverse()
+        
+        Outbound.Broadcast();
+        
+        GameState = new GameState(Outbound.Recipients.Select(sender => sender.IpAddress).Append(MyIp).Reverse()
             .ToList());
         Outbound.Broadcast($"GAMESTATE{CH.ProtocolSplit}{GameState.Serialize()}");
         Console.WriteLine(GameState.Serialize());

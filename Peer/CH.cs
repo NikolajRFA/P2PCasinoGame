@@ -7,8 +7,8 @@ public class CH : ICommunicationHandler
     public static void Ips(List<string> ips)
     {
         foreach (var ip in ips)
-            if (Outbound.Senders.All(sender => sender.IpAddress != ip))
-                Outbound.NewSender(ip);
+            if (Outbound.Recipients.All(sender => sender.IpAddress != ip))
+                Outbound.NewRecipient(ip);
     }
 
     public static string GetMethod(string data)
