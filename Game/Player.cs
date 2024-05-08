@@ -13,6 +13,8 @@ public class Player
 
     public bool PlaceCard(Table table, int handIndex)
     {
+        // Check if any piles belong to me
+        if (table.Piles.Any(pile => pile.BelongTo == this)) return false;
         var drawPile = new DrawPile<StandardPlayingCard>(isFaceUp: true);
         drawPile.PlaceOnTop(Hand[handIndex]);
         table.Piles.Add(new Table.ValuePile(drawPile,
@@ -26,27 +28,27 @@ public class Player
     {
         var filteredList = Hand.Where((_, index) => index != handIndex);
         if (!filteredList.Any(card => GameState.CardToValue(card).Item1.Contains(value))) return false;
-        var kvps = table.Piles.Where((_, index) => indexes.Contains(index)).ToList();
+        var valuePiles = table.Piles.Where((_, index) => indexes.Contains(index)).ToList();
         var cardValues = GameState.CardToValue(Hand[handIndex]).Item1;
 
         
-        if (!GenerateCombinations(kvps.Select(kvp => kvp.Values).Append(cardValues).ToList())
+        if (!GenerateCombinations(valuePiles.Select(valuePile => valuePile.Values).Append(cardValues).ToList())
             .Any(list => CanSumToTarget(list, value))) return false;
 
-        foreach (var kvp in kvps.Where((_, idx) => idx != 0))
+        foreach (var valuePile in valuePiles.Where((_, idx) => idx != 0))
         {
-            foreach (var card in kvp.Pile.Cards)
+            foreach (var card in valuePile.Pile.Cards)
             {
-                kvps.First().Pile.Cards.Push(card);
+                valuePiles.First().Pile.Cards.Push(card);
             }
 
-            table.Piles.Remove(kvp);
+            table.Piles.Remove(valuePile);
         }
 
-        kvps.First().Pile.Cards.Push(Hand[handIndex]);
+        valuePiles.First().Pile.Cards.Push(Hand[handIndex]);
         Hand.RemoveAt(handIndex);
-        kvps.First().Values.Clear();
-        kvps.First().Values.Add(value);
+        valuePiles.First().Values = [value];
+        valuePiles.First().BelongTo = this;
 
         return true;
     }
