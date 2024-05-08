@@ -21,5 +21,6 @@ public class Table
     {
         public DrawPile<StandardPlayingCard> Pile { get; set; } = pile;
         public List<int> Values { get; set; } = values;
+        public Player? BelongTo { get; set; }
     }
 }
