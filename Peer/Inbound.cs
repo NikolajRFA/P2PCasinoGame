@@ -20,10 +20,10 @@ public class Inbound
 
             Console.WriteLine($"Client connected. {client.Client.RemoteEndPoint}");
             var senderIp = client.Client.RemoteEndPoint!.ToString()!.Split(":").First();
-            if (!Outbound.Senders.ContainsKey(senderIp))
+            if (Outbound.Senders.All(sender => sender.IpAddress != senderIp))
                 Outbound.NewSender(senderIp);
             var message = "IP" + CH.ProtocolSplit +
-                          string.Join(";", Outbound.Senders.Select(x => x.Key));
+                          string.Join(";", Outbound.Senders.Select(x => x.IpAddress));
             Outbound.Broadcast(message);
             var clientThread = new Thread(HandleClientComm);
             clientThread.Start(client);

@@ -207,7 +207,7 @@ public class Program
     {
         var ready = Prompt.Confirm("Are you ready to start the game?");
         if (!ready) return false;
-        GameState = new GameState(Outbound.Senders.Select(sender => sender.Key).Append(MyIp).Reverse()
+        GameState = new GameState(Outbound.Senders.Select(sender => sender.IpAddress).Append(MyIp).Reverse()
             .ToList());
         Outbound.Broadcast($"GAMESTATE{CH.ProtocolSplit}{GameState.Serialize()}");
         Console.WriteLine(GameState.Serialize());

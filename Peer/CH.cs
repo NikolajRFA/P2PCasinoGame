@@ -7,7 +7,7 @@ public class CH : ICommunicationHandler
     public static void Ips(List<string> ips)
     {
         foreach (var ip in ips)
-            if (!Outbound.Senders.ContainsKey(ip))
+            if (Outbound.Senders.All(sender => sender.IpAddress != ip))
                 Outbound.NewSender(ip);
     }
 
@@ -40,4 +40,7 @@ public class CH : ICommunicationHandler
     {
         return (GetMethod(data), GetParameters(data));
     }
+    
+    public static void EncryptMessage(){}
+    public static void DecryptMessage(){}
 }

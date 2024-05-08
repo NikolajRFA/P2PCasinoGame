@@ -7,7 +7,8 @@ namespace Peer;
 
 public class Outbound
 {
-    public static Dictionary<string, TcpClient> Senders = new();
+    //public static Dictionary<string, TcpClient> Senders = new();
+    public static List<Sender> Senders = [];
 
     public static void Broadcast(string message)
     {
@@ -19,7 +20,7 @@ public class Outbound
             {
                 Program.GameState.AdvanceTurn(method);
                 Program.GameState.DisplayGame(Program.MyIp);
-                foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
+                foreach (var tcpClient in Senders.Select(sender => sender.Client)) SendMessage(tcpClient, message);
             }
             else
             {
@@ -28,7 +29,7 @@ public class Outbound
         }
         else
         {
-            foreach (var tcpClient in Senders.Select(sender => sender.Value)) SendMessage(tcpClient, message);
+            foreach (var tcpClient in Senders.Select(sender => sender.Client)) SendMessage(tcpClient, message);
         }
     }
 
@@ -42,9 +43,9 @@ public class Outbound
     [MethodImpl(MethodImplOptions.Synchronized)]
     public static void NewSender(string ipAddress)
     {
-        if (ipAddress.Equals(Program.MyIp) || Senders.ContainsKey(ipAddress)) return;
-        var sender = new TcpClient(ipAddress, Program.Port);
-        Senders.Add(ipAddress, sender);
+        if (ipAddress.Equals(Program.MyIp) || Senders.Any(sender => sender.IpAddress == ipAddress)) return;
+        var client = new TcpClient(ipAddress, Program.Port);
+        Senders.Add(new Sender(ipAddress, client));
         Console.WriteLine($"New sender added with ip: {ipAddress}");
     }
 }
