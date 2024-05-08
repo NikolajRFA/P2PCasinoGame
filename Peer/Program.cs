@@ -20,7 +20,7 @@ public class Program
     public static void Main(string[] args)
     {
         SetupReceiver();
-        
+
         SetupLobby();
 
         AwaitGameStart();
@@ -28,6 +28,11 @@ public class Program
         HandleTurn();
     }
 
+    /// <summary>
+    /// Prompts the user if they would like to create or join a lobby.
+    /// If create/host is selected <see cref="CreateLobby"/> is called.
+    /// Else <see cref="JoinLobby"/> is called
+    /// </summary>
     private static void SetupLobby()
     {
         while (true)
@@ -44,6 +49,13 @@ public class Program
         }
     }
 
+    /// <summary>
+    /// <para>Method used to handle the flow of turns between players.</para>
+    /// If it's the player's turn we prompt the user for an action by calling <see cref="MakeMove"/>
+    /// with the cards on the table and the derived available actions.
+    /// When the action has been generated we communicate the action to other peers.
+    /// <para>Else we wait until it's the players turn yet again.</para>
+    /// </summary>
     private static void HandleTurn()
     {
         while (true)
@@ -51,10 +63,10 @@ public class Program
             if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
             {
                 var tableCards = ExtractTableCardsToList();
-                var actions = CreatePlayerActions(tableCards, out var handCards);
-               
+                var actions = FilterPlayerActions(tableCards, out var handCards);
+
                 var message = MakeMove(actions, handCards, tableCards);
-                
+
                 Console.WriteLine(message);
                 Outbound.Broadcast(message);
             }
@@ -70,12 +82,19 @@ public class Program
         }
     }
 
+    /// <summary>
+    /// Method handling the player's move.
+    /// </summary>
+    /// <param name="actions">A filtered array of possible actions depending on the cards in the player's hand</param>
+    /// <param name="handCards">The cards on the player's hand</param>
+    /// <param name="tableCards">The cards on the table</param>
+    /// <returns>A message string representing the player's move</returns>
     private static string MakeMove(string[] actions, List<string> handCards, List<string> tableCards)
     {
         var input = Prompt.Select("Make your move", actions);
         if (input == "QUIT")
         {
-            input = QuitGame(input, actions);
+            if (!QuitGame()) input = Prompt.Select("Make your move", actions);
         }
 
         var method = "";
@@ -116,23 +135,27 @@ public class Program
         return message;
     }
 
-    private static string QuitGame(string input, string[] actions)
+    /// <summary>
+    /// Method used to handle quitting the game. Prompts the user if they want to quit.
+    /// </summary>
+    /// <returns>A boolean indicating if the game should be quit or not</returns>
+    private static bool QuitGame()
     {
         var confirmation = Prompt.Confirm("Are you sure you want to quit?");
-        if (confirmation)
-        {
-            Outbound.Broadcast($"{MyIp} has quit the game");
-            Environment.Exit(1);
-        }
-        else
-        {
-            input = Prompt.Select("Make your move", actions);
-        }
+        if (!confirmation) return false;
+        Outbound.Broadcast($"{MyIp} has quit the game");
+        Environment.Exit(1);
 
-        return input;
+        return true;
     }
 
-    private static string[] CreatePlayerActions(List<string> tableCards, out List<string> handCards)
+    /// <summary>
+    /// Method used to filter the actions presented to the player.
+    /// </summary>
+    /// <param name="tableCards">The cards on the table</param>
+    /// <param name="handCards">The cards in the player's hand</param>
+    /// <returns>An array of actions to be used when populating player prompts</returns>
+    private static string[] FilterPlayerActions(List<string> tableCards, out List<string> handCards)
     {
         string[] actions = ["Place a card", "Build", "Take", "Clear table", "QUIT"];
         if (!(tableCards.Count > 0))
@@ -144,6 +167,10 @@ public class Program
         return actions;
     }
 
+    /// <summary>
+    /// Method used to extract the cards on the table to a human-readable representation.
+    /// </summary>
+    /// <returns>A list of strings representing the cards on the table</returns>
     private static List<string> ExtractTableCardsToList()
     {
         return GameState.Table.Piles.Select(pile =>
@@ -151,6 +178,9 @@ public class Program
             (pile.Pile.Cards.Count > 1 ? $" ({pile.Values.Single()})" : "")).ToList();
     }
 
+    /// <summary>
+    /// Method used to stall the game while the lobby is being setup by the host.
+    /// </summary>
     private static void AwaitGameStart()
     {
         while (GameState == null)
@@ -159,13 +189,20 @@ public class Program
             Console.WriteLine("Waiting for game to start...");
         }
     }
-
+    
+    /// <summary>
+    /// Method used to prompt the player which lobby (IP) they would like to connect to. 
+    /// </summary>
     private static void JoinLobby()
     {
         var serverIp = Prompt.Input<string>("Enter the ip you want to connect to");
         Outbound.NewSender(serverIp);
     }
 
+    /// <summary>
+    /// Method used to create or host a lobby and start the game when ready.
+    /// </summary>
+    /// <returns></returns>
     private static bool CreateLobby()
     {
         var ready = Prompt.Confirm("Are you ready to start the game?");
@@ -178,18 +215,14 @@ public class Program
         //Console.Clear();
         GameState.DisplayGame(MyIp);
         return true;
-
     }
 
+    /// <summary>
+    /// Method to set up a receiver thread used to receive messages from other peers.
+    /// A prerequisite to enabling peers in creating or joining lobbies. 
+    /// </summary>
     private static void SetupReceiver()
     {
-        // Get all IP addresses associated with the host
-        var addresses = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
-
-        // Filter out IPv4 addresses
-        var ipv4Addresses = addresses.Where(address => address.AddressFamily == AddressFamily.InterNetwork).ToArray();
-        //MyIp = ipv4Addresses[0].ToString();
-
         Console.WriteLine($"I am {MyIp}");
         //string command;
         var receiver = new Thread(Inbound.Receiver);
