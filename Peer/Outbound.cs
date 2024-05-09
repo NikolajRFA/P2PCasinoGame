@@ -11,7 +11,7 @@ public class Outbound
     //public static Dictionary<string, TcpClient> Senders = new();
     public static List<Recipient> Recipients = [];
 
-    public static void Broadcast(string message, string encryption = "none")
+    public static void Broadcast(string message, CH.EncryptionType encryption = CH.EncryptionType.None)
     {
         
         Console.Clear();
@@ -33,7 +33,22 @@ public class Outbound
         {
             foreach (var recipient in Recipients)
             {
-                SendMessage(recipient.Client, recipient.Rsa.Encrypt(Encoding.ASCII.GetBytes(message), RSAEncryptionPadding.Pkcs1));
+                var messageBytes = Encoding.ASCII.GetBytes(message);
+                switch (encryption)
+                {
+                    case CH.EncryptionType.None:
+                        SendMessage(recipient.Client, messageBytes);
+                        break;
+                    case CH.EncryptionType.RSA:
+                        SendMessage(recipient.Client, recipient.Rsa.Encrypt(messageBytes, RSAEncryptionPadding.Pkcs1));
+                        break;
+                    case CH.EncryptionType.Aes:
+                        SendMessage(recipient.Client, Program.Aes.EncryptCbc(messageBytes, Program.Aes.IV));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(encryption), encryption, null);
+                }
+                
             }
         }
     }

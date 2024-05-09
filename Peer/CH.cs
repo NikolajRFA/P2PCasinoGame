@@ -43,4 +43,11 @@ public class CH : ICommunicationHandler
     
     public static void EncryptMessage(){}
     public static void DecryptMessage(){}
+
+    public enum EncryptionType
+    {
+        None,
+        RSA,
+        Aes
+    }
 }

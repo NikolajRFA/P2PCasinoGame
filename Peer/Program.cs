@@ -1,10 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using System.Net;
-using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using Game;
 using Sharprompt;
 
@@ -18,7 +15,7 @@ public class Program
     public static string MyIp = "172.29.0.10";
     public static GameState GameState { get; set; }
     private static RSA _rsa { get; set; } = RSA.Create();
-    private static Aes _aes { get; set; } = Aes.Create();
+    public static Aes Aes { get; set; } = Aes.Create();
 
     public static void Main(string[] args)
     {
@@ -213,7 +210,7 @@ public class Program
         var ready = Prompt.Confirm("Are you ready to start the game?");
         if (!ready) return false;
         
-        Outbound.Broadcast();
+        Outbound.Broadcast($"AES{Aes.Key};{Aes.IV}", CH.EncryptionType.RSA);
         
         GameState = new GameState(Outbound.Recipients.Select(sender => sender.IpAddress).Append(MyIp).Reverse()
             .ToList());
