@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace Xyaneon.Games.Cards.StandardPlayingCards
 {
     /// <summary>
-    /// A card from a standard 52-card deck.
+    /// A card from a standard 52-card deck.Jabra Connect 5T True Wireless
     /// </summary>
     /// <remarks>
     /// More information about a standard 52-card deck can be found here:
