@@ -71,4 +71,40 @@ public class GameStateTests
         var display = gameState.DisplayHand("Alex");
         _testOutputHelper.WriteLine(display);
     }
+
+    [Fact]
+    public void SumPoints_TwoPlayersWithEqualAmountsOfSpades_PointsAreNullified()
+    {
+        var gameState = new GameState(["Alex", "Niko"]);
+
+        // Adding cards to Alex's hand
+        gameState.Players[0].Hand.Add(new StandardPlayingCard(Rank.Three, Suit.Spades));
+        
+        // Adding cards to Niko's pointpile
+        gameState.Players[1].PointPile.AddRange([
+            new StandardPlayingCard(Rank.Seven, Suit.Spades), new StandardPlayingCard(Rank.Six, Suit.Spades)
+        ]);
+
+        // Adding cards to the table for Alex to take
+        gameState.Table.AddCards([new StandardPlayingCard(Rank.Three, Suit.Hearts)]);
+
+        // Alex taking Three of hearts with Three of spades
+        Assert.True(gameState.Players[0].Take(gameState.Table, [0], 0));
+        
+        // Alex pointpile: Three of spades, Two of hearts (2 cards)
+        // Niko pointpile: Seven of spades, Six of spades (2 cards)
+
+        // Adding a single card to the deck for the sumpoints method to not be called from advance turn
+        gameState.Deck.Cards.Push(new StandardPlayingCard(Rank.Eight, Suit.Hearts));
+
+        // Advancing turn - for Alex to be the last to take
+        gameState.AdvanceTurn("_take");
+
+        var results = gameState.SumPoints();
+
+        foreach (var result in results)
+        {
+            _testOutputHelper.WriteLine($"{result.Item1.Name} : {result.Item2}");
+        }
+    }
 }

@@ -69,6 +69,7 @@ public class GameState
         List<(Player, int)> output = [];
         var minClears = Players.Select(x => x.ClearCount).Min();
         var playerWithMaxCards = Players.MaxBy(player => player.PointPile.Count);
+        if(Players.Count(player => player.PointPile.Count == playerWithMaxCards.PointPile.Count) > 1) playerWithMaxCards = null;
         var playerWithMaxSpades = Players.MaxBy(player => player.PointPile.Count(card => card.Suit == Suit.Spades));
         Players.ForEach(player =>
         {
