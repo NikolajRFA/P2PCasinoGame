@@ -198,7 +198,7 @@ public class Program
         var serverIp = Prompt.Input<string>("Enter the ip you want to connect to");
         Outbound.NewRecipient(serverIp);
         var rsaParams = _rsa.ExportParameters(false);
-        Outbound.Broadcast($"PUB{CH.ProtocolSplit}{rsaParams.Modulus};{rsaParams.Exponent}");
+        Outbound.Broadcast($"PUB{CH.ProtocolSplit}{Encoding.ASCII.GetString(rsaParams.Modulus)};{Encoding.ASCII.GetString(rsaParams.Exponent)}");
     }
 
     /// <summary>
