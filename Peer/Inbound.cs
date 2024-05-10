@@ -72,6 +72,10 @@ public class Inbound
                     var exponent = Encoding.ASCII.GetBytes(data.Last());
                     Outbound.Recipients.Single(recipient => recipient.IpAddress == remoteIp).SetPublicKey(modulus, exponent);
                     break;
+                case not null when method.StartsWith("AES"):
+                    Program.Aes.Key = Encoding.ASCII.GetBytes(data.First());
+                    Program.Aes.IV = Encoding.ASCII.GetBytes(data.Last());
+                    break;
                 case not null when method.StartsWith('_'):
                     MethodHandler.CallMethod(method, data);
                     Program.GameState.AdvanceTurn(method);

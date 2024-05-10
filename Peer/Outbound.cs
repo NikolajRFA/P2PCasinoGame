@@ -13,7 +13,6 @@ public class Outbound
 
     public static void Broadcast(string message, CH.EncryptionType encryption = CH.EncryptionType.None)
     {
-        
         Console.Clear();
         var (method, parameters) = CH.GetPayload(message);
         if (method.StartsWith('_'))
@@ -22,7 +21,7 @@ public class Outbound
             {
                 Program.GameState.AdvanceTurn(method);
                 Program.GameState.DisplayGame(Program.MyIp);
-                foreach (var tcpClient in Recipients.Select(sender => sender.Client)) SendMessage(tcpClient, Encoding.ASCII.GetBytes(message));
+                SendMessage(message, encryption);
             }
             else
             {
@@ -31,29 +30,33 @@ public class Outbound
         }
         else
         {
-            foreach (var recipient in Recipients)
+            SendMessage(message, encryption);
+        }
+    }
+
+    private static void SendMessage(string message, CH.EncryptionType encryption)
+    {
+        foreach (var recipient in Recipients)
+        {
+            var messageBytes = Encoding.ASCII.GetBytes(message);
+            switch (encryption)
             {
-                var messageBytes = Encoding.ASCII.GetBytes(message);
-                switch (encryption)
-                {
-                    case CH.EncryptionType.None:
-                        SendMessage(recipient.Client, messageBytes);
-                        break;
-                    case CH.EncryptionType.RSA:
-                        SendMessage(recipient.Client, recipient.Rsa.Encrypt(messageBytes, RSAEncryptionPadding.Pkcs1));
-                        break;
-                    case CH.EncryptionType.Aes:
-                        SendMessage(recipient.Client, Program.Aes.EncryptCbc(messageBytes, Program.Aes.IV));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(encryption), encryption, null);
-                }
-                
+                case CH.EncryptionType.None:
+                    SendMessageImpl(recipient.Client, messageBytes);
+                    break;
+                case CH.EncryptionType.RSA:
+                    SendMessageImpl(recipient.Client, recipient.Rsa.Encrypt(messageBytes, RSAEncryptionPadding.Pkcs1));
+                    break;
+                case CH.EncryptionType.Aes:
+                    SendMessageImpl(recipient.Client, Program.Aes.EncryptCbc(messageBytes, Program.Aes.IV));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(encryption), encryption, null);
             }
         }
     }
 
-    private static void SendMessage(TcpClient client, byte[] data)
+    private static void SendMessageImpl(TcpClient client, byte[] data)
     {
         var stream = client.GetStream();
         stream.Write(data, 0, data.Length);
