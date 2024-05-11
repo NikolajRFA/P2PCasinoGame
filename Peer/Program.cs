@@ -5,7 +5,8 @@ using System.Text;
 using Game;
 using Sharprompt;
 
-namespace Peer;
+namespace Peer
+// Implement security
 
 public class Program
 {
