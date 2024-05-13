@@ -11,6 +11,7 @@ public class Outbound
     //public static Dictionary<string, TcpClient> Senders = new();
     public static List<Recipient> Recipients = [];
 
+    // TODO: How do we show what encryption is used for the message, for the 'client' to know how to decrypt?
     public static void Broadcast(string message, CH.EncryptionType encryption = CH.EncryptionType.None)
     {
         Console.Clear();
