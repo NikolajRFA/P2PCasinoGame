@@ -3,6 +3,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using Game;
+using Peer;
 using Sharprompt;
 
 namespace Peer;

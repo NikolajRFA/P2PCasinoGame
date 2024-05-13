@@ -18,11 +18,10 @@ public class Recipient
     public void SetPublicKey(byte[] modulus, byte[] exponent)
     {
         Rsa = RSA.Create();
-        RSAParameters rsaParams = new RSAParameters
-        {
-            Modulus = modulus,
-            Exponent = exponent
-        };
+        // Do not refactor to use object initializer, for some reason it does not work here!
+        RSAParameters rsaParams = new();
+        rsaParams.Exponent = exponent;
+        rsaParams.Modulus = modulus;
         Rsa.ImportParameters(rsaParams);
     }
 }
