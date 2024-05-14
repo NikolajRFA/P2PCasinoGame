@@ -12,7 +12,7 @@ public class Outbound
     public static List<Recipient> Recipients = [];
 
     // TODO: How do we show what encryption is used for the message, for the 'client' to know how to decrypt?
-    public static void Broadcast(string message, CH.EncryptionType encryption = CH.EncryptionType.None)
+    public static void Broadcast(string message, EncryptionHandler.Type encryption = EncryptionHandler.Type.None)
     {
         Console.Clear();
         var (method, parameters) = CH.GetPayload(message);
@@ -35,20 +35,20 @@ public class Outbound
         }
     }
 
-    private static void SendMessage(string message, CH.EncryptionType encryption)
+    private static void SendMessage(string message, EncryptionHandler.Type encryption)
     {
         foreach (var recipient in Recipients)
         {
             var messageBytes = Encoding.ASCII.GetBytes(message);
             switch (encryption)
             {
-                case CH.EncryptionType.None:
+                case EncryptionHandler.Type.None:
                     SendMessageImpl(recipient.Client, messageBytes);
                     break;
-                case CH.EncryptionType.RSA:
+                case EncryptionHandler.Type.RSA:
                     SendMessageImpl(recipient.Client, recipient.Rsa.Encrypt(messageBytes, RSAEncryptionPadding.Pkcs1));
                     break;
-                case CH.EncryptionType.Aes:
+                case EncryptionHandler.Type.Aes:
                     SendMessageImpl(recipient.Client, Program.Aes.EncryptCbc(messageBytes, Program.Aes.IV));
                     break;
                 default:
