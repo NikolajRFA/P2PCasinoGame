@@ -18,7 +18,7 @@ public static class EncryptionHandler
     {
         var splitMessage = input.Split(Split);
         var encryptionType = Enum.Parse<Type>(splitMessage.First());
-        var message = Encoding.ASCII.GetBytes(string.Join("", splitMessage.Skip(1).ToArray()));
+        var message = Convert.FromBase64String(string.Join("", splitMessage.Skip(1).ToArray()));
 
         var bytes = encryptionType switch
         {

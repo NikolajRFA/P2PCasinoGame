@@ -44,17 +44,18 @@ public class Outbound
             {
                 case EncryptionHandler.Type.None:
                     SendMessageImpl(recipient.Client,
-                        Encoding.ASCII.GetBytes($"None{EncryptionHandler.Split}").Concat(messageBytes).ToArray());
+                        Encoding.ASCII.GetBytes(
+                            $"None{EncryptionHandler.Split}{Convert.ToBase64String(messageBytes)}"));
                     break;
                 case EncryptionHandler.Type.RSA:
                     SendMessageImpl(recipient.Client,
-                        Encoding.ASCII.GetBytes($"RSA{EncryptionHandler.Split}")
-                            .Concat(recipient.Rsa.Encrypt(messageBytes, RSAEncryptionPadding.Pkcs1)).ToArray());
+                        Encoding.ASCII.GetBytes(
+                            $"RSA{EncryptionHandler.Split}{Convert.ToBase64String(recipient.Rsa.Encrypt(messageBytes, RSAEncryptionPadding.Pkcs1))}"));
                     break;
                 case EncryptionHandler.Type.Aes:
                     SendMessageImpl(recipient.Client,
-                        Encoding.ASCII.GetBytes($"Aes{EncryptionHandler.Split}")
-                            .Concat(Program.Aes.EncryptCbc(messageBytes, Program.Aes.IV)).ToArray());
+                        Encoding.ASCII.GetBytes(
+                            $"Aes{EncryptionHandler.Split}{Convert.ToBase64String(Program.Aes.EncryptCbc(messageBytes, Program.Aes.IV))}"));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(encryption), encryption, null);
