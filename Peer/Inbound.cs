@@ -55,8 +55,10 @@ public class Inbound
             var remoteIp = tcpClient.Client.RemoteEndPoint.ToString().Split(":").First();
             Console.Clear();
             Console.WriteLine($"{remoteIp} Received: {dataReceived}");
+            // Handle encryption
+            var decryptedData = EncryptionHandler.Decrypt(dataReceived);
             // Handle commands
-            var (method, data) = CH.GetPayload(dataReceived);
+            var (method, data) = CH.GetPayload(decryptedData);
 
             switch (method)
             {

@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using Peer;
 
 namespace TestProject1;
 
@@ -28,5 +29,13 @@ public class SecurityTests
         var encryptedMsg = hostAes.EncryptCbc(Encoding.ASCII.GetBytes(msg), hostAes.IV);
         var decryptedMsg = joinAes.DecryptCbc(encryptedMsg, joinAes.IV);
         Assert.Equal(msg, Encoding.ASCII.GetString(decryptedMsg));
+    }
+
+    [Fact]
+    public void Decrypt_NoEncryption_ReturnsMessage()
+    {
+        var msg = "Hello, World!";
+        var decryptedMsg = EncryptionHandler.Decrypt($"None{EncryptionHandler.Split}{msg}");
+        Assert.Equal(msg, decryptedMsg);
     }
 }

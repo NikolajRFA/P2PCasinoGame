@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Peer;
 
-public class EncryptionHandler
+public static class EncryptionHandler
 {
     public const string Split = ":_:";
     
@@ -14,27 +14,21 @@ public class EncryptionHandler
         Aes
     }
 
-    public string Decrypt(string input)
+    public static string Decrypt(string input)
     {
         var splitMessage = input.Split(Split);
         var encryptionType = Enum.Parse<Type>(splitMessage.First());
-        var message = Encoding.ASCII.GetBytes(string.Join("", splitMessage[1..^1]));
+        var message = Encoding.ASCII.GetBytes(string.Join("", splitMessage.Skip(1).ToArray()));
 
-        byte[] bytes = [];
-        switch (encryptionType)
+        var bytes = encryptionType switch
         {
-            case Type.None:
-                break;
-            case Type.RSA:
-                bytes = Program.RSA.Decrypt(message, RSAEncryptionPadding.Pkcs1);
-                break;
-            case Type.Aes:
-                bytes = Program.Aes.DecryptCbc(message, Program.Aes.IV);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+            Type.None => message,
+            Type.RSA => Program.RSA.Decrypt(message, RSAEncryptionPadding.Pkcs1),
+            Type.Aes => Program.Aes.DecryptCbc(message, Program.Aes.IV),
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
+        
         return Encoding.ASCII.GetString(bytes);
     }
 }

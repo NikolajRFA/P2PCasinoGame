@@ -43,13 +43,18 @@ public class Outbound
             switch (encryption)
             {
                 case EncryptionHandler.Type.None:
-                    SendMessageImpl(recipient.Client, messageBytes);
+                    SendMessageImpl(recipient.Client,
+                        Encoding.ASCII.GetBytes($"None{EncryptionHandler.Split}").Concat(messageBytes).ToArray());
                     break;
                 case EncryptionHandler.Type.RSA:
-                    SendMessageImpl(recipient.Client, recipient.Rsa.Encrypt(messageBytes, RSAEncryptionPadding.Pkcs1));
+                    SendMessageImpl(recipient.Client,
+                        Encoding.ASCII.GetBytes($"RSA{EncryptionHandler.Split}")
+                            .Concat(recipient.Rsa.Encrypt(messageBytes, RSAEncryptionPadding.Pkcs1)).ToArray());
                     break;
                 case EncryptionHandler.Type.Aes:
-                    SendMessageImpl(recipient.Client, Program.Aes.EncryptCbc(messageBytes, Program.Aes.IV));
+                    SendMessageImpl(recipient.Client,
+                        Encoding.ASCII.GetBytes($"Aes{EncryptionHandler.Split}")
+                            .Concat(Program.Aes.EncryptCbc(messageBytes, Program.Aes.IV)).ToArray());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(encryption), encryption, null);
