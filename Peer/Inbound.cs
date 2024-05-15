@@ -70,13 +70,13 @@ public class Inbound
                     Program.GameState = GameState.Deserialize(data[0]);
                     break;
                 case not null when method.StartsWith("PUB"):
-                    var modulus = Encoding.ASCII.GetBytes(data.First());
-                    var exponent = Encoding.ASCII.GetBytes(data.Last());
+                    var modulus = Convert.FromBase64String(data.First());
+                    var exponent = Convert.FromBase64String(data.Last());
                     Outbound.Recipients.Single(recipient => recipient.IpAddress == remoteIp).SetPublicKey(modulus, exponent);
                     break;
                 case not null when method.StartsWith("AES"):
-                    Program.Aes.Key = Encoding.ASCII.GetBytes(data.First());
-                    Program.Aes.IV = Encoding.ASCII.GetBytes(data.Last());
+                    Program.Aes.Key = Convert.FromBase64String(data.First());
+                    Program.Aes.IV = Convert.FromBase64String(data.Last());
                     break;
                 case not null when method.StartsWith('_'):
                     MethodHandler.CallMethod(method, data);

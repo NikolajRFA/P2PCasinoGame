@@ -14,7 +14,7 @@ public class Program
     public const int Port = 8000;
 
     //public static int GameState { get; set; }
-    public static string MyIp = "172.29.0.11";
+    public static string MyIp = "172.29.0.10";
     public static GameState GameState { get; set; }
     public static RSA RSA { get; set; } = RSA.Create();
     public static Aes Aes { get; set; } = Aes.Create();
@@ -200,7 +200,7 @@ public class Program
         var serverIp = Prompt.Input<string>("Enter the ip you want to connect to");
         Outbound.NewRecipient(serverIp);
         var rsaParams = RSA.ExportParameters(false);
-        Outbound.Broadcast($"PUB{CH.ProtocolSplit}{Encoding.ASCII.GetString(rsaParams.Modulus)};{Encoding.ASCII.GetString(rsaParams.Exponent)}");
+        Outbound.Broadcast($"PUB{CH.ProtocolSplit}{Convert.ToBase64String(rsaParams.Modulus)};{Convert.ToBase64String(rsaParams.Exponent)}");
     }
 
     /// <summary>
@@ -212,7 +212,7 @@ public class Program
         var ready = Prompt.Confirm("Are you ready to start the game?");
         if (!ready) return false;
         
-        Outbound.Broadcast($"AES{Aes.Key};{Aes.IV}", EncryptionHandler.Type.RSA);
+        Outbound.Broadcast($"AES{CH.ProtocolSplit}{Convert.ToBase64String(Aes.Key)};{Convert.ToBase64String(Aes.IV)}", EncryptionHandler.Type.RSA);
         
         GameState = new GameState(Outbound.Recipients.Select(sender => sender.IpAddress).Append(MyIp).Reverse()
             .ToList());
