@@ -70,7 +70,7 @@ public class Program
                 var message = MakeMove(actions, handCards, tableCards);
 
                 Console.WriteLine(message);
-                Outbound.Broadcast(message);
+                Outbound.Broadcast(message, EncryptionHandler.Type.Aes);
             }
             else
             {
