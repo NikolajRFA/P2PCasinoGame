@@ -5,15 +5,15 @@ namespace Peer;
 
 public class Recipient
 {
-    public string IpAddress { get; set; }
-    public TcpClient Client { get; set; }
-    public RSA Rsa { get; set; }
-
     public Recipient(string ipAddress, TcpClient client)
     {
         IpAddress = ipAddress;
         Client = client;
     }
+
+    public string IpAddress { get; set; }
+    public TcpClient Client { get; set; }
+    public RSA Rsa { get; set; }
 
     public void SetPublicKey(byte[] modulus, byte[] exponent)
     {

@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Game\Game.csproj" />
+        <ProjectReference Include="..\Game\Game.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Sharprompt" Version="3.0.0-preview4" />
+        <PackageReference Include="Sharprompt" Version="3.0.0-preview4"/>
     </ItemGroup>
 
 </Project>

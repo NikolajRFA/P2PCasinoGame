@@ -25,6 +25,7 @@ public class CH : ICommunicationHandler
     {
         return $"{string.Join(";", values)}";
     }
+
     public static List<string> GetParameters(string data)
     {
         // ["[1,2,3]", "1", "2"]
@@ -40,7 +41,12 @@ public class CH : ICommunicationHandler
     {
         return (GetMethod(data), GetParameters(data));
     }
-    
-    public static void EncryptMessage(){}
-    public static void DecryptMessage(){}
+
+    public static void EncryptMessage()
+    {
+    }
+
+    public static void DecryptMessage()
+    {
+    }
 }

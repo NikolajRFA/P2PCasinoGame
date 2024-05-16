@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
-
 namespace Peer;
 
 public class Outbound
@@ -70,7 +69,7 @@ public class Outbound
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public static void NewRecipient(string ipAddress, byte[]? publicKey = null)
+    public static void NewRecipient(string ipAddress)
     {
         if (ipAddress.Equals(Program.MyIp) || Recipients.Any(sender => sender.IpAddress == ipAddress)) return;
         var client = new TcpClient(ipAddress, Program.Port);

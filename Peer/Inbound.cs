@@ -72,7 +72,8 @@ public class Inbound
                 case not null when method.StartsWith("PUB"):
                     var modulus = Convert.FromBase64String(data.First());
                     var exponent = Convert.FromBase64String(data.Last());
-                    Outbound.Recipients.Single(recipient => recipient.IpAddress == remoteIp).SetPublicKey(modulus, exponent);
+                    Outbound.Recipients.Single(recipient => recipient.IpAddress == remoteIp)
+                        .SetPublicKey(modulus, exponent);
                     break;
                 case not null when method.StartsWith("AES"):
                     Program.Aes.Key = Convert.FromBase64String(data.First());

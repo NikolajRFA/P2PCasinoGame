@@ -3,7 +3,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using Game;
-using Peer;
 using Sharprompt;
 
 namespace Peer;
@@ -31,9 +30,9 @@ public class Program
     }
 
     /// <summary>
-    /// Prompts the user if they would like to create or join a lobby.
-    /// If create/host is selected <see cref="CreateLobby"/> is called.
-    /// Else <see cref="JoinLobby"/> is called
+    ///     Prompts the user if they would like to create or join a lobby.
+    ///     If create/host is selected <see cref="CreateLobby" /> is called.
+    ///     Else <see cref="JoinLobby" /> is called
     /// </summary>
     private static void SetupLobby()
     {
@@ -42,9 +41,8 @@ public class Program
             //Console.WriteLine("Do you want to >await< or create a connection >manually<?");
             var command = Prompt.Select("Do you want to host or join?", ["host", "join"]);
             if (command.Equals("host"))
-            {
-                if (CreateLobby()) break;
-            }
+                if (CreateLobby())
+                    break;
 
             JoinLobby();
             break;
@@ -52,16 +50,15 @@ public class Program
     }
 
     /// <summary>
-    /// <para>Method used to handle the flow of turns between players.</para>
-    /// If it's the player's turn we prompt the user for an action by calling <see cref="MakeMove"/>
-    /// with the cards on the table and the derived available actions.
-    /// When the action has been generated we communicate the action to other peers.
-    /// <para>Else we wait until it's the players turn yet again.</para>
+    ///     <para>Method used to handle the flow of turns between players.</para>
+    ///     If it's the player's turn we prompt the user for an action by calling <see cref="MakeMove" />
+    ///     with the cards on the table and the derived available actions.
+    ///     When the action has been generated we communicate the action to other peers.
+    ///     <para>Else we wait until it's the players turn yet again.</para>
     /// </summary>
     private static void HandleTurn()
     {
         while (true)
-        {
             if (GameState.Players[GameState.CurrentPlayer].Name == MyIp)
             {
                 var tableCards = ExtractTableCardsToList();
@@ -81,11 +78,10 @@ public class Program
                     Thread.Sleep(500);
                 }
             }
-        }
     }
 
     /// <summary>
-    /// Method handling the player's move.
+    ///     Method handling the player's move.
     /// </summary>
     /// <param name="actions">A filtered array of possible actions depending on the cards in the player's hand</param>
     /// <param name="handCards">The cards on the player's hand</param>
@@ -95,9 +91,8 @@ public class Program
     {
         var input = Prompt.Select("Make your move", actions);
         if (input == "QUIT")
-        {
-            if (!QuitGame()) input = Prompt.Select("Make your move", actions);
-        }
+            if (!QuitGame())
+                input = Prompt.Select("Make your move", actions);
 
         var method = "";
         var parameters = new StringBuilder();
@@ -138,7 +133,7 @@ public class Program
     }
 
     /// <summary>
-    /// Method used to handle quitting the game. Prompts the user if they want to quit.
+    ///     Method used to handle quitting the game. Prompts the user if they want to quit.
     /// </summary>
     /// <returns>A boolean indicating if the game should be quit or not</returns>
     private static bool QuitGame()
@@ -152,7 +147,7 @@ public class Program
     }
 
     /// <summary>
-    /// Method used to filter the actions presented to the player.
+    ///     Method used to filter the actions presented to the player.
     /// </summary>
     /// <param name="tableCards">The cards on the table</param>
     /// <param name="handCards">The cards in the player's hand</param>
@@ -165,12 +160,12 @@ public class Program
         handCards = GameState.Players.Single(player => player.Name == MyIp).Hand
             .Select(card => card.ToString()).ToList();
         if (handCards.All(card => card != "5 of Spades"))
-            actions = actions.Where(action => action is not ("Clear table")).ToArray();
+            actions = actions.Where(action => action is not "Clear table").ToArray();
         return actions;
     }
 
     /// <summary>
-    /// Method used to extract the cards on the table to a human-readable representation.
+    ///     Method used to extract the cards on the table to a human-readable representation.
     /// </summary>
     /// <returns>A list of strings representing the cards on the table</returns>
     private static List<string> ExtractTableCardsToList()
@@ -181,7 +176,7 @@ public class Program
     }
 
     /// <summary>
-    /// Method used to stall the game while the lobby is being setup by the host.
+    ///     Method used to stall the game while the lobby is being setup by the host.
     /// </summary>
     private static void AwaitGameStart()
     {
@@ -191,29 +186,31 @@ public class Program
             Console.WriteLine("Waiting for game to start...");
         }
     }
-    
+
     /// <summary>
-    /// Method used to prompt the player which lobby (IP) they would like to connect to. 
+    ///     Method used to prompt the player which lobby (IP) they would like to connect to.
     /// </summary>
     private static void JoinLobby()
     {
         var serverIp = Prompt.Input<string>("Enter the ip you want to connect to");
         Outbound.NewRecipient(serverIp);
         var rsaParams = RSA.ExportParameters(false);
-        Outbound.Broadcast($"PUB{CH.ProtocolSplit}{Convert.ToBase64String(rsaParams.Modulus)};{Convert.ToBase64String(rsaParams.Exponent)}");
+        Outbound.Broadcast(
+            $"PUB{CH.ProtocolSplit}{Convert.ToBase64String(rsaParams.Modulus)};{Convert.ToBase64String(rsaParams.Exponent)}");
     }
 
     /// <summary>
-    /// Method used to create or host a lobby and start the game when ready.
+    ///     Method used to create or host a lobby and start the game when ready.
     /// </summary>
     /// <returns></returns>
     private static bool CreateLobby()
     {
         var ready = Prompt.Confirm("Are you ready to start the game?");
         if (!ready) return false;
-        
-        Outbound.Broadcast($"AES{CH.ProtocolSplit}{Convert.ToBase64String(Aes.Key)};{Convert.ToBase64String(Aes.IV)}", EncryptionHandler.Type.RSA);
-        
+
+        Outbound.Broadcast($"AES{CH.ProtocolSplit}{Convert.ToBase64String(Aes.Key)};{Convert.ToBase64String(Aes.IV)}",
+            EncryptionHandler.Type.RSA);
+
         GameState = new GameState(Outbound.Recipients.Select(sender => sender.IpAddress).Append(MyIp).Reverse()
             .ToList());
         Outbound.Broadcast($"GAMESTATE{CH.ProtocolSplit}{GameState.Serialize()}", EncryptionHandler.Type.Aes);
@@ -225,8 +222,8 @@ public class Program
     }
 
     /// <summary>
-    /// Method to set up a receiver thread used to receive messages from other peers.
-    /// A prerequisite to enabling peers in creating or joining lobbies. 
+    ///     Method to set up a receiver thread used to receive messages from other peers.
+    ///     A prerequisite to enabling peers in creating or joining lobbies.
     /// </summary>
     private static void SetupReceiver()
     {

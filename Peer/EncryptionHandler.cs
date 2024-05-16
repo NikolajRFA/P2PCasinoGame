@@ -5,14 +5,14 @@ namespace Peer;
 
 public static class EncryptionHandler
 {
-    public const string Split = ":_:";
-    
     public enum Type
     {
         None,
         RSA,
         Aes
     }
+
+    public const string Split = ":_:";
 
     public static string Decrypt(string input)
     {
@@ -28,8 +28,7 @@ public static class EncryptionHandler
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        
+
         return Encoding.ASCII.GetString(bytes);
     }
 }
-
