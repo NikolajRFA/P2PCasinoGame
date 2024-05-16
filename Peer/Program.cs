@@ -171,8 +171,8 @@ public class Program
     private static List<string> ExtractTableCardsToList()
     {
         return GameState.Table.Piles.Select(pile =>
-            string.Join(", ", pile.Pile.Cards.Select(card => card.ToString())) +
-            (pile.Pile.Cards.Count > 1 ? $" ({pile.Values.Single()})" : "")).ToList();
+            string.Join(", ", pile.Cards.Select(card => card.ToString())) +
+            (pile.Cards.Count > 1 ? $" ({pile.Values.Single()})" : "")).ToList();
     }
 
     /// <summary>

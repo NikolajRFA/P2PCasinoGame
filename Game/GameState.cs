@@ -69,6 +69,7 @@ public class GameState
         List<(Player, int)> output = [];
         var minClears = Players.Select(x => x.ClearCount).Min();
         var playerWithMaxCards = Players.MaxBy(player => player.PointPile.Count);
+        if(Players.Count(player => player.PointPile.Count == playerWithMaxCards.PointPile.Count) > 1) playerWithMaxCards = null;
         var playerWithMaxSpades = Players.MaxBy(player => player.PointPile.Count(card => card.Suit == Suit.Spades));
         Players.ForEach(player =>
         {
@@ -80,7 +81,7 @@ public class GameState
                 {
                     foreach (var pile in Table.Piles)
                     {
-                        foreach (var card in pile.Pile.Cards)
+                        foreach (var card in pile.Cards)
                         {
                             player.PointPile.Add(card);
                         }
@@ -126,7 +127,7 @@ public class GameState
     public string DisplayTable()
     {
         return
-            $"Table: {string.Join(" | ", Table.Piles.Select(pile => string.Join(", ", pile.Pile.Cards.Select(card => card.ToString())) + (pile.Pile.Cards.Count > 1 ? $" ({pile.Values.Single()})" : "")))}";
+            $"Table: {string.Join(" | ", Table.Piles.Select(pile => string.Join(", ", pile.Cards.Select(card => card.ToString())) + (pile.Cards.Count > 1 ? $" ({pile.Values.Single()})" : "")))}";
     }
 
     public void DisplayGame(string player)

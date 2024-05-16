@@ -17,8 +17,9 @@ public class Player
         if (table.Piles.Any(pile => pile.BelongTo == this)) return false;
         var drawPile = new DrawPile<StandardPlayingCard>(isFaceUp: true);
         drawPile.PlaceOnTop(Hand[handIndex]);
-        table.Piles.Add(new Table.ValuePile(drawPile,
-            GameState.CardToValue(Hand[handIndex]).Item1));
+        table.Piles.Add(new CasinoDrawPile(card: Hand[handIndex]));
+        //table.Piles.Add(new Table.ValuePile(drawPile,
+        //    GameState.CardToValue(Hand[handIndex]).Item1));
         Hand.RemoveAt(handIndex);
 
         return true;
@@ -37,15 +38,15 @@ public class Player
 
         foreach (var valuePile in valuePiles.Where((_, idx) => idx != 0))
         {
-            foreach (var card in valuePile.Pile.Cards)
+            foreach (var card in valuePile.Cards)
             {
-                valuePiles.First().Pile.Cards.Push(card);
+                valuePiles.First().Cards.Push(card);
             }
 
             table.Piles.Remove(valuePile);
         }
 
-        valuePiles.First().Pile.Cards.Push(Hand[handIndex]);
+        valuePiles.First().Cards.Push(Hand[handIndex]);
         Hand.RemoveAt(handIndex);
         valuePiles.First().Values = [value];
         valuePiles.First().BelongTo = this;
@@ -64,7 +65,7 @@ public class Player
         
         if (listCombinations.Any(list => GameState.CardToValue(cardInHand).Item1.Any(val => CanSumToTarget(list, val))))
         {
-            foreach (var pile in tableCards.Select(kvp => kvp.Pile))
+            foreach (var pile in tableCards)
             {
                 var count = pile.Cards.Count;
                 for (var i = 0; i < count; i++)
@@ -97,7 +98,7 @@ public class Player
         if (Hand[handIndex] != new StandardPlayingCard(Rank.Five, Suit.Spades)) return false;
         foreach (var card in table.Piles)
         {
-            PointPile.AddRange(card.Pile.Cards);
+            PointPile.AddRange(card.Cards);
         }
         PointPile.Add(Hand[handIndex]);
         ClearCount++;
