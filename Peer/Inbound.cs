@@ -10,7 +10,7 @@ public class Inbound
     public static void Receiver()
     {
         var port = 8000;
-        var server = new TcpListener(IPAddress.Any, port);
+        var server = new TcpListener(IPAddress.Parse(Program.MyIp), port);
         server.Start();
         Console.WriteLine($"Server started on port {port}");
 

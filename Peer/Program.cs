@@ -216,7 +216,7 @@ public class Program
         
         GameState = new GameState(Outbound.Recipients.Select(sender => sender.IpAddress).Append(MyIp).Reverse()
             .ToList());
-        Outbound.Broadcast($"GAMESTATE{CH.ProtocolSplit}{GameState.Serialize()}");
+        Outbound.Broadcast($"GAMESTATE{CH.ProtocolSplit}{GameState.Serialize()}", EncryptionHandler.Type.Aes);
         Console.WriteLine(GameState.Serialize());
         //Console.WriteLine("GameState has been setup");
         //Console.Clear();
